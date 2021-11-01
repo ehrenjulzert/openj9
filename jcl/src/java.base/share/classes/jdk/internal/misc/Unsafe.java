@@ -6555,7 +6555,16 @@ public final class Unsafe {
 	public native <V> void putValue(Object obj, long offset, Class<?> clz, V value);
 	public native <V> V uninitializedDefaultValue(Class<?> clz);
 	public native <V> long valueHeaderSize(Class<V> clz);
+
+	/**
+	 * Determines whether a class is a flattened array
+	 *
+	 * @param clz the class to check
+	 * @return boolean value indicating whether the class is a flattened array
+	 */
 	public native boolean isFlattenedArray(Class<?> clz);
+
+	private native boolean isFieldFlattenedHelper(Field field);
 
 	public final <V> boolean compareAndSetValue(Object obj, long offset, Class<?> clz, V v1, V v2) {
 		throw OpenJDKCompileStubThrowError();
@@ -6625,9 +6634,17 @@ public final class Unsafe {
 		throw OpenJDKCompileStubThrowError();
 	}
 
+	/**
+	 * Determines whether a field is flattened
+	 *
+	 * @param field the field to check
+	 * @return boolean value indicating whether the field is flattened
+	 */
 	public boolean isFlattened(java.lang.reflect.Field field) {
-		// ToDo: this is a temporary implementation - https://github.com/eclipse-openj9/openj9/issues/13614
-		return false;
+		if (null == field) {
+			return false;
+		}
+		return isFieldFlattenedHelper(field);
 	}
 
 	public long getObjectSize(Object o) {
