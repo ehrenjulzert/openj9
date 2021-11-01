@@ -4021,13 +4021,44 @@ done:
 		return EXECUTE_BYTECODE;
 	}
 
-	/* ToDo: unimplemented - https://github.com/eclipse-openj9/openj9/issues/13614 */
 	/* jdk.internal.misc.Unsafe: public native boolean isFlattenedArray(Class<?> clz); */
 	VMINLINE VM_BytecodeAction
 	inlUnsafeIsFlattenedArray(REGISTER_ARGS_LIST)
 	{
+		j9object_t cls = *(j9object_t*)_sp;
+
 		updateVMStruct(REGISTER_ARGS);
-		Assert_VM_unreachable();
+		buildInternalNativeStackFrame(REGISTER_ARGS);
+
+		J9Class *fieldClazz = J9VM_J9CLASS_FROM_HEAPCLASS(_currentThread, cls);
+		I_32 result = (I_32)J9_IS_J9CLASS_FLATTENED(fieldClazz);
+		
+		restoreInternalNativeStackFrame(REGISTER_ARGS);
+		returnSingleFromINL(REGISTER_ARGS, result, 2);
+		return EXECUTE_BYTECODE;
+	}
+
+	VMINLINE VM_BytecodeAction
+	inlUnsafeIsFlattenedHelper(REGISTER_ARGS_LIST)
+	{
+		j9object_t field = *(j9object_t*)_sp;
+
+		updateVMStruct(REGISTER_ARGS);
+		buildInternalNativeStackFrame(REGISTER_ARGS);
+
+		J9JNIFieldID *fieldID = _vm->reflectFunctions.idFromFieldObject(_currentThread, NULL, field);
+		I_32 result = (I_32)FALSE;
+		if ((NULL != fieldID)
+			&& (NULL != fieldID->declaringClass)
+			&& (NULL != fieldID->declaringClass->flattenedClassCache)
+		) {
+			J9Class *fieldClazz = fieldID->declaringClass;
+			J9ROMFieldShape *romField = fieldID->field;
+			result = (I_32)isFlattenableFieldFlattened(fieldClazz, romField);
+		}
+
+		restoreInternalNativeStackFrame(REGISTER_ARGS);
+		returnSingleFromINL(REGISTER_ARGS, result, 2);
 		return EXECUTE_BYTECODE;
 	}
 #endif /* J9VM_OPT_VALHALLA_VALUE_TYPES */
@@ -9654,6 +9685,7 @@ public:
 		JUMP_TABLE_ENTRY(J9_BCLOOP_SEND_TARGET_INL_UNSAFE_UNINITIALIZEDDEFAULTVALUE),
 		JUMP_TABLE_ENTRY(J9_BCLOOP_SEND_TARGET_INL_UNSAFE_VALUEHEADERSIZE),
 		JUMP_TABLE_ENTRY(J9_BCLOOP_SEND_TARGET_INL_UNSAFE_ISFLATTENEDARRAY),
+		JUMP_TABLE_ENTRY(J9_BCLOOP_SEND_TARGET_INL_UNSAFE_ISFLATTENEDHELPER),
 #endif /* J9VM_OPT_VALHALLA_VALUE_TYPES */
 		JUMP_TABLE_ENTRY(J9_BCLOOP_SEND_TARGET_INL_INTERNALS_GET_INTERFACES),
 		JUMP_TABLE_ENTRY(J9_BCLOOP_SEND_TARGET_INL_ARRAY_NEW_ARRAY_IMPL),
@@ -10223,6 +10255,8 @@ runMethod: {
 		PERFORM_ACTION(inlUnsafeValueHeaderSize(REGISTER_ARGS));
 	JUMP_TARGET(J9_BCLOOP_SEND_TARGET_INL_UNSAFE_ISFLATTENEDARRAY):
 		PERFORM_ACTION(inlUnsafeIsFlattenedArray(REGISTER_ARGS));
+	JUMP_TARGET(J9_BCLOOP_SEND_TARGET_INL_UNSAFE_ISFLATTENEDHELPER):
+		PERFORM_ACTION(inlUnsafeIsFlattenedHelper(REGISTER_ARGS));
 #endif /* J9VM_OPT_VALHALLA_VALUE_TYPES */
 	JUMP_TARGET(J9_BCLOOP_SEND_TARGET_INL_INTERNALS_GET_INTERFACES):
 		PERFORM_ACTION(inlInternalsGetInterfaces(REGISTER_ARGS));
