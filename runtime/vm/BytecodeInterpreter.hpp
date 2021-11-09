@@ -60,6 +60,8 @@
 #include "ObjectMonitor.hpp"
 #include "JITInterface.hpp"
 
+#include <stdio.h>
+
 #if 0
 #define DEBUG_MUST_HAVE_VM_ACCESS(vmThread) Assert_VM_mustHaveVMAccess(vmThread)
 #else
@@ -4025,15 +4027,27 @@ done:
 	VMINLINE VM_BytecodeAction
 	inlUnsafeIsFlattenedArray(REGISTER_ARGS_LIST)
 	{
+		printf("FLATARRAY 1\n");
 		j9object_t cls = *(j9object_t*)_sp;
+		printf("FLATARRAY cls value:%p\n", cls);
+		printf("FLATARRAY cls is null:%d\n", cls == NULL);
 
+		printf("FLATARRAY 2\n");
 		updateVMStruct(REGISTER_ARGS);
+		printf("FLATARRAY 3\n");
 		buildInternalNativeStackFrame(REGISTER_ARGS);
 
+		printf("FLATARRAY 4\n");
 		J9Class *fieldClazz = J9VM_J9CLASS_FROM_HEAPCLASS(_currentThread, cls);
+		printf("FLATARRAY fieldClazz value:%p\n", fieldClazz);
+		printf("FLATARRAY fieldClazz is null:%d\n", fieldClazz == NULL);
+		printf("FLATARRAY 5\n");
 		I_32 result = (I_32)J9_IS_J9CLASS_FLATTENED(fieldClazz);
+		printf("FLATARRAY fieldClazz result:%d\n", result);
 		
+		printf("FLATARRAY 6\n");
 		restoreInternalNativeStackFrame(REGISTER_ARGS);
+		printf("FLATARRAY 7\n");
 		returnSingleFromINL(REGISTER_ARGS, result, 2);
 		return EXECUTE_BYTECODE;
 	}
@@ -4041,24 +4055,48 @@ done:
 	VMINLINE VM_BytecodeAction
 	inlUnsafeIsFlattenedHelper(REGISTER_ARGS_LIST)
 	{
+		printf("FLATNORMAL 1\n");
 		j9object_t field = *(j9object_t*)_sp;
+		printf("FLATNORMAL field value: %p\n", field);
+		printf("FLATNORMAL field is null: %d\n", field == NULL);
 
+		printf("FLATNORMAL 2\n");
 		updateVMStruct(REGISTER_ARGS);
+		printf("FLATNORMAL 3\n");
 		buildInternalNativeStackFrame(REGISTER_ARGS);
 
+		printf("FLATNORMAL 4\n");
 		J9JNIFieldID *fieldID = _vm->reflectFunctions.idFromFieldObject(_currentThread, NULL, field);
+		printf("FLATNORMAL 5\n");
 		I_32 result = (I_32)FALSE;
+		printf("FLATNORMAL 6\n");
+		printf("FLATNORMAL fieldID value: %p\n", fieldID);
+		printf("FLATNORMAL fieldID is null: %d\n", fieldID == NULL);
 		if ((NULL != fieldID)
 			&& (NULL != fieldID->declaringClass)
 			&& (NULL != fieldID->declaringClass->flattenedClassCache)
 		) {
+			printf("FLATNORMAL 7\n");
 			J9Class *fieldClazz = fieldID->declaringClass;
+			printf("FLATNORMAL 8\n");
 			J9ROMFieldShape *romField = fieldID->field;
+			printf("FLATNORMAL 9\n");
+
+			printf("FLATNORMAL fieldClazz value: %p\n", fieldClazz);
+			printf("FLATNORMAL fieldClazz is null: %d\n", fieldClazz == NULL);
+			printf("FLATNORMAL romField value: %p\n", romField);
+			printf("FLATNORMAL romField is null: %d\n", romField == NULL);
+
 			result = (I_32)isFlattenableFieldFlattened(fieldClazz, romField);
+
+			printf("FLATNORMAL result: %d\n", result);
 		}
 
+		printf("FLATNORMAL 10\n");
 		restoreInternalNativeStackFrame(REGISTER_ARGS);
+		printf("FLATNORMAL 11\n");
 		returnSingleFromINL(REGISTER_ARGS, result, 2);
+		printf("FLATNORMAL 12\n");
 		return EXECUTE_BYTECODE;
 	}
 #endif /* J9VM_OPT_VALHALLA_VALUE_TYPES */
