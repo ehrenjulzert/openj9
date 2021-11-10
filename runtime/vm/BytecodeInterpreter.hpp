@@ -4038,12 +4038,15 @@ done:
 		buildInternalNativeStackFrame(REGISTER_ARGS);
 
 		printf("FLATARRAY 4\n");
-		J9Class *fieldClazz = J9VM_J9CLASS_FROM_HEAPCLASS(_currentThread, cls);
-		printf("FLATARRAY fieldClazz value:%p\n", fieldClazz);
-		printf("FLATARRAY fieldClazz is null:%d\n", fieldClazz == NULL);
-		printf("FLATARRAY 5\n");
-		I_32 result = (I_32)J9_IS_J9CLASS_FLATTENED(fieldClazz);
-		printf("FLATARRAY fieldClazz result:%d\n", result);
+		I_32 result = (I_32)FALSE;
+		if (NULL != cls) { 
+			J9Class *fieldClazz = J9VM_J9CLASS_FROM_HEAPCLASS(_currentThread, cls);
+			printf("FLATARRAY fieldClazz value:%p\n", fieldClazz);
+			printf("FLATARRAY fieldClazz is null:%d\n", fieldClazz == NULL);
+			printf("FLATARRAY 5\n");
+			result = (I_32)J9_IS_J9CLASS_FLATTENED(fieldClazz);
+			printf("FLATARRAY fieldClazz result:%d\n", result);
+		}
 		
 		printf("FLATARRAY 6\n");
 		restoreInternalNativeStackFrame(REGISTER_ARGS);
