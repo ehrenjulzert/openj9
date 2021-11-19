@@ -4044,26 +4044,28 @@ done:
 	}
 
 	VMINLINE VM_BytecodeAction
-	inlUnsafeIsFieldFlattenedHelper(REGISTER_ARGS_LIST)
+	inlUnsafeIsFlattened(REGISTER_ARGS_LIST)
 	{
 		j9object_t field = *(j9object_t*)_sp;
+		VM_BytecodeAction rc = EXECUTE_BYTECODE;
 
 		updateVMStruct(REGISTER_ARGS);
 		buildInternalNativeStackFrame(REGISTER_ARGS);
 
-		J9JNIFieldID *fieldID = _vm->reflectFunctions.idFromFieldObject(_currentThread, NULL, field);
-
-		I_32 result = (I_32)FALSE;
-		if ((NULL != fieldID)
-			&& (NULL != fieldID->declaringClass)
-			&& (NULL != fieldID->declaringClass->flattenedClassCache)
-		) {
-			result = (I_32)isFlattenableFieldFlattened(fieldID->declaringClass, fieldID->field);
+		if (NULL == field) {
+			rc = THROW_NPE;
+		} else {
+			J9JNIFieldID *fieldID = _vm->reflectFunctions.idFromFieldObject(_currentThread, NULL, field);
+			if (VM_VMHelpers::exceptionPending(_currentThread)) {
+				rc = GOTO_THROW_CURRENT_EXCEPTION;
+			} else {
+				I_32 result = (I_32)isFlattenableFieldFlattened(fieldID->declaringClass, fieldID->field);
+				restoreInternalNativeStackFrame(REGISTER_ARGS);
+				returnSingleFromINL(REGISTER_ARGS, result, 2);
+			}
 		}
 
-		restoreInternalNativeStackFrame(REGISTER_ARGS);
-		returnSingleFromINL(REGISTER_ARGS, result, 2);
-		return EXECUTE_BYTECODE;
+		return rc;
 	}
 #endif /* J9VM_OPT_VALHALLA_VALUE_TYPES */
 
@@ -9687,7 +9689,7 @@ public:
 		JUMP_TABLE_ENTRY(J9_BCLOOP_SEND_TARGET_INL_UNSAFE_UNINITIALIZEDDEFAULTVALUE),
 		JUMP_TABLE_ENTRY(J9_BCLOOP_SEND_TARGET_INL_UNSAFE_VALUEHEADERSIZE),
 		JUMP_TABLE_ENTRY(J9_BCLOOP_SEND_TARGET_INL_UNSAFE_ISFLATTENEDARRAY),
-		JUMP_TABLE_ENTRY(J9_BCLOOP_SEND_TARGET_INL_UNSAFE_ISFIELDFLATTENEDHELPER),
+		JUMP_TABLE_ENTRY(J9_BCLOOP_SEND_TARGET_INL_UNSAFE_ISFLATTENED),
 #endif /* J9VM_OPT_VALHALLA_VALUE_TYPES */
 		JUMP_TABLE_ENTRY(J9_BCLOOP_SEND_TARGET_INL_INTERNALS_GET_INTERFACES),
 		JUMP_TABLE_ENTRY(J9_BCLOOP_SEND_TARGET_INL_ARRAY_NEW_ARRAY_IMPL),
@@ -10257,8 +10259,8 @@ runMethod: {
 		PERFORM_ACTION(inlUnsafeValueHeaderSize(REGISTER_ARGS));
 	JUMP_TARGET(J9_BCLOOP_SEND_TARGET_INL_UNSAFE_ISFLATTENEDARRAY):
 		PERFORM_ACTION(inlUnsafeIsFlattenedArray(REGISTER_ARGS));
-	JUMP_TARGET(J9_BCLOOP_SEND_TARGET_INL_UNSAFE_ISFIELDFLATTENEDHELPER):
-		PERFORM_ACTION(inlUnsafeIsFieldFlattenedHelper(REGISTER_ARGS));
+	JUMP_TARGET(J9_BCLOOP_SEND_TARGET_INL_UNSAFE_ISFLATTENED):
+		PERFORM_ACTION(inlUnsafeIsFlattened(REGISTER_ARGS));
 #endif /* J9VM_OPT_VALHALLA_VALUE_TYPES */
 	JUMP_TARGET(J9_BCLOOP_SEND_TARGET_INL_INTERNALS_GET_INTERFACES):
 		PERFORM_ACTION(inlInternalsGetInterfaces(REGISTER_ARGS));

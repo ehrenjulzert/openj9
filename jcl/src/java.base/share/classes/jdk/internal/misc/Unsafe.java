@@ -6564,7 +6564,13 @@ public final class Unsafe {
 	 */
 	public native boolean isFlattenedArray(Class<?> clz);
 
-	private native boolean isFieldFlattenedHelper(Field field);
+	/**
+	 * Determines whether a field is flattened
+	 *
+	 * @param field the field to check
+	 * @return boolean value indicating whether the field is flattened
+	 */
+	public native boolean isFlattened(Field field);
 
 	public final <V> boolean compareAndSetValue(Object obj, long offset, Class<?> clz, V v1, V v2) {
 		throw OpenJDKCompileStubThrowError();
@@ -6632,19 +6638,6 @@ public final class Unsafe {
 
 	public final <V> Object getAndSetValueAcquire(Object obj, long offset, Class<?> clz, V v) {
 		throw OpenJDKCompileStubThrowError();
-	}
-
-	/**
-	 * Determines whether a field is flattened
-	 *
-	 * @param field the field to check
-	 * @return boolean value indicating whether the field is flattened
-	 */
-	public boolean isFlattened(java.lang.reflect.Field field) {
-		if (null == field) {
-			throw new NullPointerException();
-		}
-		return isFieldFlattenedHelper(field);
 	}
 
 	public long getObjectSize(Object o) {
