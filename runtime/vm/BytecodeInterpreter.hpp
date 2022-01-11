@@ -3997,19 +3997,24 @@ done:
 			J9Class *clzJ9Class = J9VM_J9CLASS_FROM_HEAPCLASS(_currentThread, clz);
 
 			if (J9_IS_J9CLASS_VALUETYPE(clzJ9Class)) {
-				VM_VMHelpers::pushObjectInSpecialFrame(_currentThread, obj);
-				result = _currentThread->javaVM->memoryManagerFunctions->J9AllocateObject(_currentThread, clzJ9Class, J9_GC_ALLOCATE_OBJECT_NON_INSTRUMENTABLE);
-				obj = VM_VMHelpers::popObjectInSpecialFrame(_currentThread);
+				result = VM_ValueTypeHelpers::getFlattenableFieldAtOffset(
+					_currentThread,
+					_objectAccessBarrier,
+					_objectAllocate,
+					clzJ9Class,
+					obj,
+					offset,
+					true);
 
-				if (! J9_UNEXPECTED(NULL == result)) {
-					clzJ9Class = VM_VMHelpers::currentClass(clzJ9Class);
-					UDATA clzDataStart = (UDATA)J9VMTHREAD_OBJECT_HEADER_SIZE(_currentThread) + J9CLASS_PREPADDING_SIZE(clzJ9Class);
-					_objectAccessBarrier.copyObjectFields(_currentThread,
+				if (NULL == result) {
+					result = VM_ValueTypeHelpers::getFlattenableFieldAtOffset(
+						_currentThread,
+						_objectAccessBarrier,
+						_objectAllocate,
 						clzJ9Class,
 						obj,
 						offset,
-						result,
-						clzDataStart);
+						false);
 				}
 			}
 		} else {
@@ -4036,12 +4041,11 @@ done:
 			J9Class *clzJ9Class = J9VM_J9CLASS_FROM_HEAPCLASS(_currentThread, clz);
 
 			if (J9_IS_J9CLASS_VALUETYPE(clzJ9Class)) {
-				UDATA clzDataStart = (UDATA)J9VMTHREAD_OBJECT_HEADER_SIZE(_currentThread) + J9CLASS_PREPADDING_SIZE(clzJ9Class);
-				_objectAccessBarrier.copyObjectFields(_currentThread,
-					clzJ9Class,
-					value,
-					clzDataStart,
-					obj,
+				VM_ValueTypeHelpers::putFlattenableFieldAtOffset(_currentThread, 
+					_objectAccessBarrier, 
+					clzJ9Class, 
+					value, 
+					obj, 
 					offset);
 			}
 		} else {
