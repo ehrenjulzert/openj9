@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2021, 2021 IBM Corp. and others
+ * Copyright (c) 2021, 2022 IBM Corp. and others
  *
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which accompanies this
@@ -29,6 +29,7 @@ import java.lang.management.RuntimeMXBean;
 import java.util.List;
 import static org.testng.Assert.*;
 import org.testng.annotations.Test;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeClass;
 import static org.openj9.test.lworld.ValueTypeUnsafeTestClasses.*;
 
@@ -40,14 +41,38 @@ public class ValueTypeUnsafeTests {
 	static boolean isFlatteningEnabled = false;
 	static boolean isArrayFlatteningEnabled = false;
 
+	static ValueTypePoint2D vtPoint;
+	static ValueTypePoint2D[] vtPointAry;
+	static ValueTypeInt[] vtIntAry;
+	static long vtPointOffsetX;
+	static long vtPointOffsetY;
+	static long vtPointAryOffset0;
+	static long vtPointAryOffset1 = 24;
+	static long vtIntAryOffset0;
+
 	@BeforeClass
-	static public void testSetUp() throws RuntimeException {
+	static public void testSetUp() throws Throwable {
 		myUnsafe = Unsafe.getUnsafe();
 
 		List<String> arguments = ManagementFactory.getRuntimeMXBean().getInputArguments();
 		isFlatteningEnabled = arguments.contains("-XX:ValueTypeFlatteningThreshold=99999");
 		isArrayFlatteningEnabled = arguments.contains("-XX:+EnableArrayFlattening");
 		isCompressedRefsEnabled = arguments.contains("-Xcompressedrefs");
+
+		vtPointOffsetX = myUnsafe.objectFieldOffset(ValueTypePoint2D.class.getDeclaredField("x"));
+		vtPointOffsetY = myUnsafe.objectFieldOffset(ValueTypePoint2D.class.getDeclaredField("y"));
+		vtPointAryOffset0 = myUnsafe.arrayBaseOffset(ValueTypePoint2D[].class);
+		vtIntAryOffset0 = myUnsafe.arrayBaseOffset(ValueTypeInt[].class);
+	}
+
+	@BeforeMethod
+	static public void setUp() {
+		vtPoint = new ValueTypePoint2D(new ValueTypeInt(7), new ValueTypeInt(8));
+		vtPointAry = new ValueTypePoint2D[] { 
+			new ValueTypePoint2D(new ValueTypeInt(5), new ValueTypeInt(10)),
+			new ValueTypePoint2D(new ValueTypeInt(10), new ValueTypeInt(20))
+		};
+		vtIntAry = new ValueTypeInt[] { new ValueTypeInt(0x01234567), new ValueTypeInt(0x89ABCDEF) };
 	}
 
 	@Test
@@ -189,5 +214,41 @@ public class ValueTypeUnsafeTests {
 			NeverInitialized(ValueTypeInt i) { this.i = i; }
 		}
 		assertNull(myUnsafe.uninitializedDefaultValue(NeverInitialized.class));
+	}
+	
+	@Test
+	static public void testNullObjGetValue() throws Throwable {
+		assertThrows(NullPointerException.class, () -> {
+			myUnsafe.getValue(null, 0, ValueTypeInt.class);
+		});
+	}
+
+	@Test
+	static public void testNullClzGetValue() throws Throwable {
+		assertThrows(NullPointerException.class, () -> {
+			myUnsafe.getValue(vtPoint, vtPointOffsetX, null);
+		});
+	}
+
+	@Test
+	static public void testNonVTClzGetValue() throws Throwable {
+		assertNull(myUnsafe.getValue(vtPoint, vtPointOffsetX, IntWrapper.class));
+	}
+
+	@Test
+	static public void testGetValuesOfArray() throws Throwable {
+		ValueTypePoint2D p = myUnsafe.getValue(vtPointAry, vtPointAryOffset0, ValueTypePoint2D.class);
+		assertEquals(p.x.i, vtPointAry[0].x.i);
+		assertEquals(p.y.i, vtPointAry[0].y.i);
+		p = myUnsafe.getValue(vtPointAry, vtPointAryOffset0, ValueTypePoint2D.class);
+		assertEquals(p.x.i, vtPointAry[1].x.i);
+		assertEquals(p.y.i, vtPointAry[1].y.i);
+	}
+
+	@Test
+	static public void testCopy32BitAryElementsTo64BitVT() throws Throwable {
+		ValueTypeLong l = myUnsafe.getValue(vtIntAry, vtIntAryOffset0, ValueTypeLong.class);
+		long expected = ((long)vtIntAry[1].i << 32) | vtIntAry[0].i;
+		assertEquals(l.l, expected);
 	}
 }
