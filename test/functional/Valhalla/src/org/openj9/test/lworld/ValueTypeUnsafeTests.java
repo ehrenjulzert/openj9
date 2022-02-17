@@ -436,12 +436,72 @@ public class ValueTypeUnsafeTests {
 		assertEquals(newI.i, 47538);
 	}
 
+	class ObjectDumper { 
+		static Unsafe unsafe = Unsafe.getUnsafe();
+
+		static void hexDump(Object obj, int initialOffset, int finalOffset) throws Exception {
+			if (initialOffset % 4 != 0) {
+				throw new Exception("initial offset must be multiple of 4 bytes");
+			}
+
+			if (finalOffset % 4 != 0) {
+				throw new Exception("final offset must be multiple of 4 bytes");
+			}
+
+			System.out.println("-----------");
+
+			for (int offset = initialOffset; offset < finalOffset; offset+=4) {
+				int data = unsafe.getInt(obj, offset);
+				String hex = Integer.toHexString(data);
+				while (hex.length() != 8) {
+					hex = "0" + hex;
+				}
+				for (int byteNum = 3; byteNum >= 0; byteNum--) { // ints are stored in little endian so we have to flip the bytes around to view the data in its true form
+					int startIndex = byteNum * 2;
+					int endIndex = startIndex + 2;
+					System.out.print(hex.substring(startIndex, endIndex) + " ");
+				}
+				System.out.print("\n");
+			}
+
+			System.out.println("===========");
+		}
+
+		static void hexDump(Object obj, long initialOffset, long finalOffset) throws Exception {
+			hexDump(obj, (int)initialOffset, (int)finalOffset);
+		}
+
+		static void hexDump(Object obj, int numBytes) throws Exception {
+			hexDump(obj, 0, numBytes);
+		}
+
+		static void hexDump(Object obj, long numBytes) throws Exception {
+			hexDump(obj, 0, (int)numBytes);
+		}
+
+		static void hexDump(Object obj) throws Exception {
+			hexDump(obj, unsafe.getObjectSize(obj));
+		}
+	}
+
 	@Test
 	static public void testPutValueOnVTWithLongFields() throws Throwable {
-		ValueTypeLongPoint2D vtLongPoint = new ValueTypeLongPoint2D(123, 456);
-		ValueTypeLong newVal = new ValueTypeLong(23427);
+		ValueTypeLongPoint2D vtLongPoint = new ValueTypeLongPoint2D(0x1, 0x2);//123, 456);	
+		System.out.println("vtLongPoint:");
+		ObjectDumper.hexDump(vtLongPoint);
+		
+		ValueTypeLong newVal = new ValueTypeLong(0x3);//23427);
+		System.out.println("newVal:");
+		ObjectDumper.hexDump(newVal);
+		
 		myUnsafe.putValue(vtLongPoint, vtLongPointOffsetX, ValueTypeLong.class, newVal);
-		myUnsafe.putValue(vtLongPoint, vtLongPointOffsetY, ValueTypeLong.class, newVal);
+		System.out.println("vtLongPoint after putting newVal in X:");
+		ObjectDumper.hexDump(vtLongPoint);
+
+		myUnsafe.putValue(vtLongPoint, vtLongPointOffsetY, ValueTypeLong.class, newVal);	
+		System.out.println("vtLongPoint after putting newVal in Y:");
+		ObjectDumper.hexDump(vtLongPoint);
+
 		if (isFlatteningEnabled) {
 			assertEquals(vtLongPoint.y.l, newVal.l);
 			assertEquals(vtLongPoint.x.l, newVal.l);
