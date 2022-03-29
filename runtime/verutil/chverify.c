@@ -135,7 +135,7 @@ checkNameImpl (J9CfrConstantPoolInfo * info, BOOLEAN isClass, BOOLEAN isMethod, 
 
 
 static VMINLINE I_32
-isInitOrClinitImpl (J9CfrConstantPoolInfo * info)
+isInitOrClinitOrNewImpl (J9CfrConstantPoolInfo * info)
 {
 	U_8 *name = info->bytes;
 
@@ -150,33 +150,38 @@ isInitOrClinitImpl (J9CfrConstantPoolInfo * info)
 		if (J9UTF8_DATA_EQUALS("<clinit>", 8, name, info->slot1)) {
 			return CFR_METHOD_NAME_CLINIT;
 		}
+#if defined(J9VM_OPT_VALHALLA_VALUE_TYPES) && defined(J9VM_OPT_NEW_FACTORY_METHOD)
+		if (J9UTF8_DATA_EQUALS("<new>", 5, name, info->slot1)) {
+			return CFR_METHOD_NAME_NEW;
+		}
+#endif /* #if defined(J9VM_OPT_VALHALLA_VALUE_TYPES) && defined(J9VM_OPT_NEW_FACTORY_METHOD) */
 		return CFR_METHOD_NAME_INVALID;
 	}
 	return 0; /* not <init> or <clinit> */
 }
 
 /**
- * Determine if this name is either "<init>" or "<clinit>".
+ * Determine if this name is "<init>", "<clinit>", or "<new>".
  *
- * @returns 0 if name is a normal name, 1 if '<init>' and 2 if '<clinit>' , -1 if it starts with '<' but is not a valid class name.
- * @note result is positive if the name is "<init>" or "<clinit>", result is negative if the name is illegal
+ * @returns 0 if name is a normal name, 1 if '<init>', 2 if '<clinit>', 3 if '<new>', and -1 if it starts with '<' but is not a valid class name.
+ * @note result is positive if the name is "<init>", "<clinit>", or "<new>", result is negative if the name is illegal
  */
 I_32
-bcvIsInitOrClinit (J9CfrConstantPoolInfo * info)
+bcvIsInitOrClinitOrNew (J9CfrConstantPoolInfo * info)
 {
-	return isInitOrClinitImpl(info);
+	return isInitOrClinitOrNewImpl(info);
 }
 
 /**
  * Determine if this a valid name for Methods.
  *
- * @returns 1 if '<init>' and 2 if '<clinit>', otherwise 0 or positive if a valid name; negative value if class name is invalid
+ * @returns 1 if '<init>', 2 if '<clinit>', and 3 if '<new>', otherwise 0 or positive if a valid name; negative value if class name is invalid
  */
 I_32
 bcvCheckMethodName (J9CfrConstantPoolInfo * info)
 {
 	U_8 *c = info->bytes;
-	I_32 nameStatus = isInitOrClinitImpl(info);
+	I_32 nameStatus = isInitOrClinitOrNewImpl(info);
 	if (0 == nameStatus) {
 		nameStatus = checkNameImpl(info, FALSE, TRUE, FALSE);
 	}

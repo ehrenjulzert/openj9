@@ -887,10 +887,15 @@ checkBytecodeStructure (J9CfrClassFile * classfile, UDATA methodIndex, UDATA len
 			info = &(classfile->constantPool[classfile->constantPool[index].slot1]);
 			U_16 returnChar = getReturnTypeFromSignature(classfile->constantPool[classfile->constantPool[index].slot2].bytes, classfile->constantPool[classfile->constantPool[index].slot2].slot1, NULL);
 			if (info->bytes[0] == '<') {
-				if ((IS_QTYPE(returnChar) && (bc != CFR_BC_invokestatic))
-					|| (!IS_QTYPE(returnChar) && (bc != CFR_BC_invokespecial))
-					|| (info->tag != CFR_CONSTANT_Utf8)
+				if ((info->tag != CFR_CONSTANT_Utf8)
 					|| !J9UTF8_DATA_EQUALS("<init>", 6, info->bytes, info->slot1)
+#if defined(J9VM_OPT_VALHALLA_VALUE_TYPES) && defined(J9VM_OPT_NEW_FACTORY_METHOD)
+					|| (J9UTF8_DATA_EQUALS("<new>", 5, info->bytes, info->slot1) && (bc != CFR_BC_invokestatic))
+					|| (!J9UTF8_DATA_EQUALS("<new>", 5, info->bytes, info->slot1) && (bc != CFR_BC_invokespecial))
+#else /* #if defined(J9VM_OPT_VALHALLA_VALUE_TYPES) && defined(J9VM_OPT_NEW_FACTORY_METHOD) */
+					|| ((IS_QTYPE(returnChar) || IS_LTYPE(returnChar)) && (bc != CFR_BC_invokestatic))
+					|| (!(IS_QTYPE(returnChar) || IS_LTYPE(returnChar)) && (bc != CFR_BC_invokespecial))
+#endif /* #if defined(J9VM_OPT_VALHALLA_VALUE_TYPES) && defined(J9VM_OPT_NEW_FACTORY_METHOD) */
 				) {
 					errorType = J9NLS_CFR_ERR_BC_METHOD_INVALID__ID;
 					goto _verifyError;
@@ -1544,7 +1549,7 @@ checkMethodStructure (J9PortLibrary * portLib, J9CfrClassFile * classfile, UDATA
 
 	/* Throw a class format error if we are given a static <init> method (otherwise later we will throw a verify error due to back stack shape) */
 	info = &(classfile->constantPool[method->nameIndex]);
-	if (method->accessFlags & CFR_ACC_STATIC) {
+	if ((method->accessFlags & CFR_ACC_STATIC) && !J9_IS_CLASSFILE_VALUETYPE(classfile)) {
 		if (CFR_CONSTANT_Utf8 == info->tag) {
 			if (J9UTF8_DATA_EQUALS("<init>", 6, info->bytes, info->slot1)) {
 				/* The error code here is for modifiers, return type check is done in j9bcv_verifyClassStructure(). */
@@ -1794,6 +1799,12 @@ j9bcv_verifyClassStructure (J9PortLibrary * portLib, J9CfrClassFile * classfile,
 				/* TODO: determine if this should be verifyError */
 				goto _formatError;
 			}
+#ifdef J9VM_OPT_VALHALLA_VALUE_TYPES
+			if ((CFR_CONSTANT_InvokeDynamic == info->tag) && isInit) {
+				errorType = J9NLS_CFR_ERR_BAD_METHOD_NAME__ID;
+				goto _formatError;
+			}
+#endif /* #ifdef J9VM_OPT_VALHALLA_VALUE_TYPES */
 			break;
 		}
 		case CFR_CONSTANT_MethodType:
@@ -1809,7 +1820,7 @@ j9bcv_verifyClassStructure (J9PortLibrary * portLib, J9CfrClassFile * classfile,
 				J9CfrConstantPoolInfo *methodref = &classfile->constantPool[info->slot2];
 				nameAndSig = &classfile->constantPool[methodref->slot2];
 				utf8 = &classfile->constantPool[nameAndSig->slot1];
-				isInit = bcvIsInitOrClinit(utf8);
+				isInit = bcvIsInitOrClinitOrNew(utf8);
 				if (CFR_METHOD_NAME_CLINIT == isInit) {
 					errorType = J9NLS_CFR_ERR_BAD_METHOD_NAME__ID;
 					goto _formatError;
@@ -1820,6 +1831,14 @@ j9bcv_verifyClassStructure (J9PortLibrary * portLib, J9CfrClassFile * classfile,
 						goto _formatError;
 					}
 				}
+#if defined(J9VM_OPT_VALHALLA_VALUE_TYPES) && defined(J9VM_OPT_NEW_FACTORY_METHOD)
+				if (CFR_METHOD_NAME_NEW == isInit) {
+					if (info->slot1 != MH_REF_INVOKESTATIC) {
+						errorType = J9NLS_CFR_ERR_BAD_METHOD_NAME__ID;
+						goto _formatError;
+					}
+				}
+#endif /* #if defined(J9VM_OPT_VALHALLA_VALUE_TYPES) && defined(J9VM_OPT_NEW_FACTORY_METHOD) */
 			}
 			break;
 
