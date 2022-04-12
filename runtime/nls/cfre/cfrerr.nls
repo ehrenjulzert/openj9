@@ -1634,35 +1634,37 @@ J9NLS_CFR_ERR_PERMITS_VALUE_ON_INTERFACE.user_response=Contact the provider of t
 
 J9NLS_CFR_ERR_VALUE_CLASS_FIELD_NOT_STATIC_OR_FINAL=Fields of value classes must have either ACC_STATIC or ACC_FINAL flags set.
 # START NON-TRANSLATABLE
-J9NLS_CFR_ERR_PERMITS_VALUE_ON_INTERFACE.explanation=Please consult the Java Virtual Machine Specification for a detailed explanation.
-J9NLS_CFR_ERR_PERMITS_VALUE_ON_INTERFACE.system_action=The JVM will throw a verification or class loading-related exception such as java.lang.ClassFormatError.
-J9NLS_CFR_ERR_PERMITS_VALUE_ON_INTERFACE.user_response=Contact the provider of the class file for a corrected version.
+J9NLS_CFR_ERR_VALUE_CLASS_FIELD_NOT_STATIC_OR_FINAL.explanation=Please consult the Java Virtual Machine Specification for a detailed explanation.
+J9NLS_CFR_ERR_VALUE_CLASS_FIELD_NOT_STATIC_OR_FINAL.system_action=The JVM will throw a verification or class loading-related exception such as java.lang.ClassFormatError.
+J9NLS_CFR_ERR_VALUE_CLASS_FIELD_NOT_STATIC_OR_FINAL.user_response=Contact the provider of the class file for a corrected version.
 # END NON-TRANSLATABLE
 
-J9NLS_CFR_ERR_MISSING_ACC_STATIC_ON_ABSTRACT_CLASS_FIELD=In an abstract class that has its ACC_PERMITS_VALUE flag set, each field must have its ACC_STATIC flag set.
+J9NLS_CFR_ERR_MISSING_ACC_STATIC_ON_ABSTRACT_CLASS_FIELD=In an abstract class with ACC_PERMITS_VALUE flag, each field must have ACC_STATIC flag set.
 # START NON-TRANSLATABLE
-J9NLS_CFR_ERR_PERMITS_VALUE_ON_INTERFACE.explanation=Please consult the Java Virtual Machine Specification for a detailed explanation.
-J9NLS_CFR_ERR_PERMITS_VALUE_ON_INTERFACE.system_action=The JVM will throw a verification or class loading-related exception such as java.lang.ClassFormatError.
-J9NLS_CFR_ERR_PERMITS_VALUE_ON_INTERFACE.user_response=Contact the provider of the class file for a corrected version.
+J9NLS_CFR_ERR_MISSING_ACC_STATIC_ON_ABSTRACT_CLASS_FIELD.explanation=Please consult the Java Virtual Machine Specification for a detailed explanation.
+J9NLS_CFR_ERR_MISSING_ACC_STATIC_ON_ABSTRACT_CLASS_FIELD.system_action=The JVM will throw a verification or class loading-related exception such as java.lang.ClassFormatError.
+J9NLS_CFR_ERR_MISSING_ACC_STATIC_ON_ABSTRACT_CLASS_FIELD.user_response=Contact the provider of the class file for a corrected version.
 # END NON-TRANSLATABLE
 
-J9NLS_CFR_ERR_NON_STATIC_SYNCHRONIZED_VALUE_TYPE_METHOD=In value classes and in abstract classes that have their ACC_PERMITS_VALUE flag set, a method that has its ACC_SYNCHRONIZED flag set must also have its ACC_STATIC flag set.
+J9NLS_CFR_ERR_NON_STATIC_SYNCHRONIZED_VALUE_TYPE_METHOD=In value classes and in abstract classes with ACC_PERMITS_VALUE flag, a synchronized method must be static
 # START NON-TRANSLATABLE
-J9NLS_CFR_ERR_PERMITS_VALUE_ON_INTERFACE.explanation=Please consult the Java Virtual Machine Specification for a detailed explanation.
-J9NLS_CFR_ERR_PERMITS_VALUE_ON_INTERFACE.system_action=The JVM will throw a verification or class loading-related exception such as java.lang.ClassFormatError.
-J9NLS_CFR_ERR_PERMITS_VALUE_ON_INTERFACE.user_response=Contact the provider of the class file for a corrected version.
+J9NLS_CFR_ERR_NON_STATIC_SYNCHRONIZED_VALUE_TYPE_METHOD.explanation=Please consult the Java Virtual Machine Specification for a detailed explanation.
+J9NLS_CFR_ERR_NON_STATIC_SYNCHRONIZED_VALUE_TYPE_METHOD.system_action=The JVM will throw a verification or class loading-related exception such as java.lang.ClassFormatError.
+J9NLS_CFR_ERR_NON_STATIC_SYNCHRONIZED_VALUE_TYPE_METHOD.user_response=Contact the provider of the class file for a corrected version.
 # END NON-TRANSLATABLE
 
+# <new> is not translatable
 J9NLS_CFR_ERR_ACC_STATIC_NOT_ON_NEW=A method named <new> must have its ACC_STATIC flag set.
 # START NON-TRANSLATABLE
-J9NLS_CFR_ERR_PERMITS_VALUE_ON_INTERFACE.explanation=Please consult the Java Virtual Machine Specification for a detailed explanation.
-J9NLS_CFR_ERR_PERMITS_VALUE_ON_INTERFACE.system_action=The JVM will throw a verification or class loading-related exception such as java.lang.ClassFormatError.
-J9NLS_CFR_ERR_PERMITS_VALUE_ON_INTERFACE.user_response=Contact the provider of the class file for a corrected version.
+J9NLS_CFR_ERR_ACC_STATIC_NOT_ON_NEW.explanation=Please consult the Java Virtual Machine Specification for a detailed explanation.
+J9NLS_CFR_ERR_ACC_STATIC_NOT_ON_NEW.system_action=The JVM will throw a verification or class loading-related exception such as java.lang.ClassFormatError.
+J9NLS_CFR_ERR_ACC_STATIC_NOT_ON_NEW.user_response=Contact the provider of the class file for a corrected version.
 # END NON-TRANSLATABLE
 
+# <init> is not translatable
 J9NLS_CFR_ERR_INIT_ON_VALUE_CLASS=Methods of value classes cannot be named <init>
 # START NON-TRANSLATABLE
-J9NLS_CFR_ERR_PERMITS_VALUE_ON_INTERFACE.explanation=Please consult the Java Virtual Machine Specification for a detailed explanation.
-J9NLS_CFR_ERR_PERMITS_VALUE_ON_INTERFACE.system_action=The JVM will throw a verification or class loading-related exception such as java.lang.ClassFormatError.
-J9NLS_CFR_ERR_PERMITS_VALUE_ON_INTERFACE.user_response=Contact the provider of the class file for a corrected version.
+J9NLS_CFR_ERR_INIT_ON_VALUE_CLASS.explanation=Please consult the Java Virtual Machine Specification for a detailed explanation.
+J9NLS_CFR_ERR_INIT_ON_VALUE_CLASS.system_action=The JVM will throw a verification or class loading-related exception such as java.lang.ClassFormatError.
+J9NLS_CFR_ERR_INIT_ON_VALUE_CLASS.user_response=Contact the provider of the class file for a corrected version.
 # END NON-TRANSLATABLE

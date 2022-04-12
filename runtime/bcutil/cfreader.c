@@ -1642,7 +1642,8 @@ checkFields(J9PortLibrary* portLib, J9CfrClassFile * classfile, U_8 * segment, U
 				goto _errorFound;
 			}
 		}
-		if (J9_ARE_ALL_BITS_SET(classfile->accessFlags, CFR_ACC_ABSTRACT | CFR_ACC_PERMITS_VALUE)) {
+		if (J9_ARE_ALL_BITS_SET(classfile->accessFlags, CFR_ACC_PERMITS_VALUE)) {
+			/* if CFR_ACC_PERMITS_VALUE is set, we already know that CFR_ACC_ABSTRACT must be set as well */
 			if (J9_ARE_NO_BITS_SET(value, CFR_ACC_STATIC)) {
 				errorCode = J9NLS_CFR_ERR_MISSING_ACC_STATIC_ON_ABSTRACT_CLASS_FIELD__ID;
 				goto _errorFound;
@@ -1798,15 +1799,18 @@ checkMethods(J9PortLibrary* portLib, J9CfrClassFile* classfile, U_8* segment, U_
 		} 
 
 		if (nameIndexOK && utf8Equal(&classfile->constantPool[method->nameIndex], "<init>", 6)) {
-#if defined(J9VM_OPT_VALHALLA_VALUE_TYPES) && defined(J9VM_OPT_NEW_FACTORY_METHOD)
-			if (J9_IS_CLASSFILE_VALUETYPE(classfile)) {
+			BOOLEAN classfileIsValuetype = J9_IS_CLASSFILE_VALUETYPE(classfile);
+#ifdef J9VM_OPT_VALHALLA_VALUE_TYPES
+#ifdef J9VM_OPT_VALHALLA_NEW_FACTORY_METHOD
+			if (classfileIsValuetype) {
 				errorCode = J9NLS_CFR_ERR_INIT_ON_VALUE_CLASS__ID;
 				goto _errorFound;
 			}
-#endif /* #if defined(J9VM_OPT_VALHALLA_VALUE_TYPES) && defined(J9VM_OPT_NEW_FACTORY_METHOD) */
+#endif /* #ifdef J9VM_OPT_VALHALLA_VALUE_TYPES */
+#endif /* #ifdef J9VM_OPT_VALHALLA_NEW_FACTORY_METHOD */
 
 			/* check no invalid flags set */
-			if (!J9_IS_CLASSFILE_VALUETYPE(classfile) && (value & ~CFR_INIT_METHOD_ACCESS_MASK)) {
+			if ((!classfileIsValuetype) && (value & ~CFR_INIT_METHOD_ACCESS_MASK)) {
 				errorCode = J9NLS_CFR_ERR_INIT_METHOD__ID;
 				goto _errorFound;
 			}
@@ -1823,14 +1827,16 @@ checkMethods(J9PortLibrary* portLib, J9CfrClassFile* classfile, U_8* segment, U_
 			}
 		}
 
-#if defined(J9VM_OPT_VALHALLA_VALUE_TYPES) && defined(J9VM_OPT_NEW_FACTORY_METHOD)
+#ifdef J9VM_OPT_VALHALLA_VALUE_TYPES
+#ifdef J9VM_OPT_VALHALLA_NEW_FACTORY_METHOD
 		if (nameIndexOK && utf8Equal(&classfile->constantPool[method->nameIndex], "<new>", 5)) {
 			if (J9_ARE_NO_BITS_SET(value, CFR_ACC_STATIC)) {
 				errorCode = J9NLS_CFR_ERR_ACC_STATIC_NOT_ON_NEW__ID;
 				goto _errorFound;
 			}
 		}
-#endif /* #if defined(J9VM_OPT_VALHALLA_VALUE_TYPES) && defined(J9VM_OPT_NEW_FACTORY_METHOD) */
+#endif /* #ifdef J9VM_OPT_VALHALLA_VALUE_TYPES */
+#endif /* #ifdef J9VM_OPT_VALHALLA_NEW_FACTORY_METHOD */
 
 		/* Check interface-method-only access flag constraints. */
 		if (classfile->accessFlags & CFR_ACC_INTERFACE) {
@@ -1888,11 +1894,13 @@ checkMethods(J9PortLibrary* portLib, J9CfrClassFile* classfile, U_8* segment, U_
 
 #if defined(J9VM_OPT_VALHALLA_VALUE_TYPES)
 		if (J9_ARE_ALL_BITS_SET(classfile->accessFlags, CFR_ACC_VALUE_TYPE) ||
-			J9_ARE_ALL_BITS_SET(classfile->accessFlags, CFR_ACC_ABSTRACT | CFR_ACC_PERMITS_VALUE))
+			J9_ARE_ALL_BITS_SET(classfile->accessFlags, CFR_ACC_PERMITS_VALUE))
 		{
-			if (J9_ARE_ALL_BITS_SET(value, CFR_ACC_SYNCHRONIZED) && J9_ARE_NO_BITS_SET(value, CFR_ACC_STATIC)) {
-				errorCode = J9NLS_CFR_ERR_NON_STATIC_SYNCHRONIZED_VALUE_TYPE_METHOD__ID;
-				goto _errorFound;
+			if (J9_ARE_ALL_BITS_SET(value, CFR_ACC_SYNCHRONIZED)) {
+				if (J9_ARE_NO_BITS_SET(value, CFR_ACC_STATIC)) {
+					errorCode = J9NLS_CFR_ERR_NON_STATIC_SYNCHRONIZED_VALUE_TYPE_METHOD__ID;
+					goto _errorFound;
+				}
 			}
 		}
 #endif /* #ifdef J9VM_OPT_VALHALLA_VALUE_TYPES */

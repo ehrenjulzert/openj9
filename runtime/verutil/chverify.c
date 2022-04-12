@@ -150,11 +150,13 @@ isInitOrClinitOrNewImpl (J9CfrConstantPoolInfo * info)
 		if (J9UTF8_DATA_EQUALS("<clinit>", 8, name, info->slot1)) {
 			return CFR_METHOD_NAME_CLINIT;
 		}
-#if defined(J9VM_OPT_VALHALLA_VALUE_TYPES) && defined(J9VM_OPT_NEW_FACTORY_METHOD)
+#ifdef J9VM_OPT_VALHALLA_VALUE_TYPES
+#ifdef J9VM_OPT_VALHALLA_NEW_FACTORY_METHOD
 		if (J9UTF8_DATA_EQUALS("<new>", 5, name, info->slot1)) {
 			return CFR_METHOD_NAME_NEW;
 		}
-#endif /* #if defined(J9VM_OPT_VALHALLA_VALUE_TYPES) && defined(J9VM_OPT_NEW_FACTORY_METHOD) */
+#endif /* #ifdef J9VM_OPT_VALHALLA_VALUE_TYPES */
+#endif /* #ifdef J9VM_OPT_VALHALLA_NEW_FACTORY_METHOD */
 		return CFR_METHOD_NAME_INVALID;
 	}
 	return 0; /* not <init> or <clinit> */
@@ -163,7 +165,7 @@ isInitOrClinitOrNewImpl (J9CfrConstantPoolInfo * info)
 /**
  * Determine if this name is "<init>", "<clinit>", or "<new>".
  *
- * @returns 0 if name is a normal name, 1 if '<init>', 2 if '<clinit>', 3 if '<new>', and -1 if it starts with '<' but is not a valid class name.
+ * @returns 0 if name is a normal name, CFR_METHOD_NAME_INIT if '<init>', CFR_METHOD_NAME_CLINIT if '<clinit>', CFR_METHOD_NAME_NEW if '<new>', and -1 if it starts with '<' but is not a valid class name.
  * @note result is positive if the name is "<init>", "<clinit>", or "<new>", result is negative if the name is illegal
  */
 I_32
@@ -175,7 +177,7 @@ bcvIsInitOrClinitOrNew (J9CfrConstantPoolInfo * info)
 /**
  * Determine if this a valid name for Methods.
  *
- * @returns 1 if '<init>', 2 if '<clinit>', and 3 if '<new>', otherwise 0 or positive if a valid name; negative value if class name is invalid
+ * @returns CFR_METHOD_NAME_INIT if '<init>', CFR_METHOD_NAME_CLINIT if '<clinit>', and CFR_METHOD_NAME_NEW if '<new>', otherwise 0 if a valid name; negative value if class name is invalid
  */
 I_32
 bcvCheckMethodName (J9CfrConstantPoolInfo * info)
