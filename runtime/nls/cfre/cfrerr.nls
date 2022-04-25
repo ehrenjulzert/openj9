@@ -1666,3 +1666,42 @@ J9NLS_CFR_ERR_PERMITS_VALUE_ON_INTERFACE.explanation=Please consult the Java Vir
 J9NLS_CFR_ERR_PERMITS_VALUE_ON_INTERFACE.system_action=The JVM will throw a verification or class loading-related exception such as java.lang.ClassFormatError.
 J9NLS_CFR_ERR_PERMITS_VALUE_ON_INTERFACE.user_response=Contact the provider of the class file for a corrected version.
 # END NON-TRANSLATABLE
+
+J9NLS_INVALID_REFERENCETYPE_DESCRIPTOR=A ReferenceType descriptor cannot be referenced by a CONSTANT_Class_info structure that represents this_class, super_class, or the interfaces array
+# START NON-TRANSLATABLE
+J9NLS_INVALID_REFERENCETYPE_DESCRIPTOR.explanation=Please consult the Java Virtual Machine Specification for a detailed explanation.
+J9NLS_INVALID_REFERENCETYPE_DESCRIPTOR.system_action=The JVM will throw a verification or class loading-related exception such as java.lang.ClassFormatError.
+J9NLS_INVALID_REFERENCETYPE_DESCRIPTOR.user_response=Contact the provider of the class file for a corrected version.
+# END NON-TRANSLATABLE
+
+J9NLS_BAD_REFERENCETYPE_IN_CONSTANT_CLASS_INFO=A StandardReferenceType or DeclaredPrimitiveType ReferenceType descriptor cannot be used as the name_index field of a CONSTANT_Class_info structure 
+# START NON-TRANSLATABLE
+J9NLS_BAD_REFERENCETYPE_IN_CONSTANT_CLASS_INFO.explanation=Please consult the Java Virtual Machine Specification for a detailed explanation.
+J9NLS_BAD_REFERENCETYPE_IN_CONSTANT_CLASS_INFO.system_action=The JVM will throw a verification or class loading-related exception such as java.lang.ClassFormatError.
+J9NLS_BAD_REFERENCETYPE_IN_CONSTANT_CLASS_INFO.user_response=Contact the provider of the class file for a corrected version.
+# END NON-TRANSLATABLE
+
+J9NLS_INVALID_DECLAIREDPRIMITIVETYPE=The descriptor_index entry of a CONSTANT_NameAndType_info or CONSTANT_MethodType_info structure must not be a DeclaredPrimitiveType field descriptor
+# START NON-TRANSLATABLE
+J9NLS_INVALID_DECLAIREDPRIMITIVETYPE.explanation=Please consult the Java Virtual Machine Specification for a detailed explanation.
+J9NLS_INVALID_DECLAIREDPRIMITIVETYPE.system_action=The JVM will throw a verification or class loading-related exception such as java.lang.ClassFormatError.
+J9NLS_INVALID_DECLAIREDPRIMITIVETYPE.user_response=Contact the provider of the class file for a corrected version.
+# END NON-TRANSLATABLE
+
+J9NLS_CFR_ERR_CATCH_IS_REFERENCE_TYPE_DESCRIPTOR=Exception handler type cannot be a reference type descriptor
+# START NON-TRANSLATABLE
+J9NLS_CFR_ERR_CATCH_IS_REFERENCE_TYPE_DESCRIPTOR.explanation=Please consult the Java Virtual Machine Specification for a detailed explanation.
+J9NLS_CFR_ERR_CATCH_IS_REFERENCE_TYPE_DESCRIPTOR.system_action=The JVM will throw a verification or classloading-related exception such as java.lang.ClassFormatError.
+J9NLS_CFR_ERR_CATCH_IS_REFERENCE_TYPE_DESCRIPTOR.user_response=Contact the provider of the classfile for a corrected version.
+
+J9NLS_CFR_ERR_EXCEPTION_IS_REFERENCE_TYPE_DESCRIPTOR=Exception type cannot be a reference type descriptor
+# START NON-TRANSLATABLE
+J9NLS_CFR_ERR_EXCEPTION_IS_REFERENCE_TYPE_DESCRIPTOR.explanation=Please consult the Java Virtual Machine Specification for a detailed explanation.
+J9NLS_CFR_ERR_EXCEPTION_IS_REFERENCE_TYPE_DESCRIPTOR.system_action=The JVM will throw a verification or classloading-related exception such as java.lang.ClassFormatError.
+J9NLS_CFR_ERR_EXCEPTION_IS_REFERENCE_TYPE_DESCRIPTOR.user_response=Contact the provider of the classfile for a corrected version.
+
+J9NLS_CFR_ERR_INNER_CLASS_REFERENCE_TYPE=Inner class info cannot be a referencetype descriptor
+# START NON-TRANSLATABLE
+J9NLS_CFR_ERR_INNER_CLASS_REFERENCE_TYPE.explanation=Please consult the Java Virtual Machine Specification for a detailed explanation.
+J9NLS_CFR_ERR_INNER_CLASS_REFERENCE_TYPE.system_action=The JVM will throw a verification or classloading-related exception such as java.lang.ClassFormatError.
+J9NLS_CFR_ERR_INNER_CLASS_REFERENCE_TYPE.user_response=Contact the provider of the classfile for a corrected version.
