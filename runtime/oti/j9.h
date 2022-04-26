@@ -352,11 +352,6 @@ static const struct { \
 #define IS_LTYPE(firstChar) ('L' == (firstChar))
 
 #define J9_IS_STRING_DESCRIPTOR(str, strLen) (((strLen) > 2) && (IS_REF_OR_VAL_SIGNATURE(*(str))) && (';' == *((str) + (strLen) - 1)))
-#define IS_STRING_STANDARD_REFERENCE_TYPE_FIELD_DESCRIPTOR(str, strLen) ('L' == (*(str)) && (';' == *((str) + (strLen) - 1)))
-#define IS_STRING_DECLARED_PRIMITIVE_TYPE_FIELD_DESCRIPTOR(str, strLen) ('Q' == (*(str)) && (';' == *((str) + (strLen) - 1)))
-#define IS_STRING_ARRAY_TYPE_FIELD_DESCRIPTOR(str) ('[' == *(str))
-#define IS_STRING_REFERENCE_TYPE_DESCRIPTOR(str, strLen) (IS_STRING_STANDARD_REFERENCE_TYPE_FIELD_DESCRIPTOR(str, strLen) || IS_STRING_DECLARED_PRIMITIVE_TYPE_FIELD_DESCRIPTOR(str, strLen) || IS_STRING_ARRAY_TYPE_FIELD_DESCRIPTOR(str))
-
 #define J9_IS_SINGLE_THREAD_MODE(vm) (J9_ARE_ALL_BITS_SET((vm)->extendedRuntimeFlags2, J9_EXTENDED_RUNTIME2_CRIU_SINGLE_THREAD_MODE))
 
 #define J9_IS_HIDDEN_METHOD(method) \

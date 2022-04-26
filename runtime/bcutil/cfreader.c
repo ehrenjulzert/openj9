@@ -1435,13 +1435,6 @@ checkPool(J9CfrClassFile* classfile, U_8* segment, U_8* poolStart, I_32 *maxBoot
 				goto _errorFound;
 			}
 
-#if !defined(J9VM_OPT_VALHALLA_VALUE_TYPES)
-			if (IS_STRING_STANDARD_REFERENCE_TYPE_FIELD_DESCRIPTOR(utf8->bytes, utf8->slot1) || IS_STRING_DECLARED_PRIMITIVE_TYPE_FIELD_DESCRIPTOR(utf8->bytes, utf8->slot1)) {
-				errorCode = J9NLS_BAD_REFERENCETYPE_IN_CONSTANT_CLASS_INFO__ID;
-				goto _errorFound;
-			}
-#endif /* #if !defined(J9VM_OPT_VALHALLA_VALUE_TYPES) */
-
 			index += 3;
 			break;
 		
@@ -1500,12 +1493,6 @@ checkPool(J9CfrClassFile* classfile, U_8* segment, U_8* poolStart, I_32 *maxBoot
 				errorCode = J9NLS_CFR_ERR_BAD_DESCRIPTOR_INDEX__ID;
 				goto _errorFound;
 			}
-#if !defined(J9VM_OPT_VALHALLA_VALUE_TYPES)
-			if (IS_STRING_DECLARED_PRIMITIVE_TYPE_FIELD_DESCRIPTOR(utf8->bytes, utf8->slot1)) {
-				errorCode = J9NLS_INVALID_DECLAIREDPRIMITIVETYPE__ID;
-				goto _errorFound;
-			}
-#endif /* #if !defined(J9VM_OPT_VALHALLA_VALUE_TYPES) */
 			index += 5;
 			break;
 
@@ -1520,12 +1507,6 @@ checkPool(J9CfrClassFile* classfile, U_8* segment, U_8* poolStart, I_32 *maxBoot
 				errorCode = J9NLS_CFR_ERR_BAD_DESCRIPTOR_INDEX__ID;
 				goto _errorFound;
 			}
-#if !defined(J9VM_OPT_VALHALLA_VALUE_TYPES)
-			if (IS_STRING_DECLARED_PRIMITIVE_TYPE_FIELD_DESCRIPTOR(utf8->bytes, utf8->slot1)) {
-				errorCode = J9NLS_INVALID_DECLAIREDPRIMITIVETYPE__ID;
-				goto _errorFound;
-			}
-#endif /* #if !defined(J9VM_OPT_VALHALLA_VALUE_TYPES) */
 			index += 3;
 			break;
 
@@ -2069,8 +2050,7 @@ checkAttributes(J9PortLibrary* portLib, J9CfrClassFile* classfile, J9CfrAttribut
 				}
 #if defined(J9VM_OPT_VALHALLA_VALUE_TYPES)
 				if (cpBase[value].tag == CFR_CONSTANT_Class) {
-					J9CfrConstantPoolInfo utf8 = cpBase[cpBase[value].slot1];
-					if (IS_STRING_REFERENCE_TYPE_DESCRIPTOR(utf8.bytes, utf8.slot1)) {
+					if (bcvCheckName(&cpBase[cpBase[value].slot1])) {
 						errorCode = J9NLS_CFR_ERR_CATCH_IS_REFERENCE_TYPE_DESCRIPTOR__ID;
 						goto _errorFound;
 					}
@@ -2096,9 +2076,8 @@ checkAttributes(J9PortLibrary* portLib, J9CfrClassFile* classfile, J9CfrAttribut
 					errorCode = J9NLS_CFR_ERR_EXCEPTION_NOT_CLASS__ID;
 					goto _errorFound;
 				}
-				utf8 = &cpBase[cpBase[value].slot1];
 #if defined(J9VM_OPT_VALHALLA_VALUE_TYPES)
-				if (IS_STRING_REFERENCE_TYPE_DESCRIPTOR(utf8->bytes, utf8->slot1)) {
+				if (bcvCheckName(&cpBase[cpBase[value].slot1])) {
 					errorCode = J9NLS_CFR_ERR_EXCEPTION_IS_REFERENCE_TYPE_DESCRIPTOR__ID;
 					goto _errorFound;
 				}
@@ -2243,7 +2222,7 @@ checkAttributes(J9PortLibrary* portLib, J9CfrClassFile* classfile, J9CfrAttribut
 				}
 #if defined(J9VM_OPT_VALHALLA_VALUE_TYPES)
 				classInfoUtf8 = &cpBase[cpBase[value].slot1];
-				if (IS_STRING_REFERENCE_TYPE_DESCRIPTOR(classInfoUtf8->bytes, classInfoUtf8->slot1)) {
+				if (bcvCheckName(classInfoUtf8)) {
 					errorCode = J9NLS_CFR_ERR_INNER_CLASS_REFERENCE_TYPE__ID;
 					goto _errorFound;
 				}
@@ -2274,9 +2253,9 @@ checkAttributes(J9PortLibrary* portLib, J9CfrClassFile* classfile, J9CfrAttribut
 					/* Capture the error if the outer_class_info_index points to an array class or other referencetype descriptor */
 					if (
 #if defined(J9VM_OPT_VALHALLA_VALUE_TYPES)
-						IS_STRING_REFERENCE_TYPE_DESCRIPTOR(classInfoUtf8->bytes, classInfoUtf8->slot1)
+						bcvCheckName(classInfoUtf8)
 #else /* #if defined(J9VM_OPT_VALHALLA_VALUE_TYPES) */
-						IS_STRING_ARRAY_TYPE_FIELD_DESCRIPTOR(classInfoUtf8->bytes, classInfoUtf8->slot1)
+						('[' == outerClassInfoUtf8->bytes[0])
 #endif /* #if defined(J9VM_OPT_VALHALLA_VALUE_TYPES) */
 					) {
 						errorCode = J9NLS_CFR_ERR_OUTER_CLASS_BAD_ARRAY_CLASS__ID;
@@ -2658,7 +2637,6 @@ checkClass(J9PortLibrary *portLib, J9CfrClassFile* classfile, U_8* segment, U_32
 	U_32 value, errorCode, offset;
 	U_32 i;
 	I_32 maxBootstrapMethodIndex = -1;
-	J9CfrConstantPoolInfo poolInfo;
 
 	if(checkPool(classfile, segment, (U_8*)10, &maxBootstrapMethodIndex, flags)) {
 		return -1;
@@ -2719,8 +2697,7 @@ checkClass(J9PortLibrary *portLib, J9CfrClassFile* classfile, U_8* segment, U_32
 		}
 
 #if defined(J9VM_OPT_VALHALLA_VALUE_TYPES)
-		poolInfo = classfile->constantPool[value];
-		if (IS_STRING_REFERENCE_TYPE_DESCRIPTOR(poolInfo.bytes, poolInfo.slot1)) {
+		if (bcvCheckName(&classfile->constantPool[value])) {
 			errorCode = J9NLS_INVALID_REFERENCETYPE_DESCRIPTOR__ID;
 			offset = endOfConstantPool + 2;
 			goto _errorFound;
@@ -2743,15 +2720,16 @@ checkClass(J9PortLibrary *portLib, J9CfrClassFile* classfile, U_8* segment, U_32
 			goto _errorFound;
 		}
 	} else {
-		if (classfile->constantPool[value].tag != CFR_CONSTANT_Class) {
+		J9CfrConstantPoolInfo* superClassInfo = &classfile->constantPool[value];
+
+		if (superClassInfo->tag != CFR_CONSTANT_Class) {
 			errorCode = J9NLS_CFR_ERR_SUPER_NOT_CLASS__ID;
 			offset = endOfConstantPool + 4;
 			goto _errorFound;
 		}
 
 #if defined(J9VM_OPT_VALHALLA_VALUE_TYPES)
-		poolInfo = classfile->constantPool[classfile->constantPool[classfile->superClass].slot1];
-		if (IS_STRING_REFERENCE_TYPE_DESCRIPTOR(poolInfo.bytes, poolInfo.slot1)) {
+		if (bcvCheckName(&classfile->constantPool[superClassInfo->slot1])) {
 			errorCode = J9NLS_INVALID_REFERENCETYPE_DESCRIPTOR__ID;
 			offset = endOfConstantPool + 4;
 			goto _errorFound;
@@ -2785,8 +2763,7 @@ checkClass(J9PortLibrary *portLib, J9CfrClassFile* classfile, U_8* segment, U_32
 			}
 		}
 #if defined(J9VM_OPT_VALHALLA_VALUE_TYPES)
-		poolInfo = classfile->constantPool[cpInfo->slot1];
-		if (IS_STRING_REFERENCE_TYPE_DESCRIPTOR(poolInfo.bytes, poolInfo.slot1)) {
+		if (bcvCheckName(&classfile->constantPool[cpInfo->slot1])) {
 			errorCode = J9NLS_INVALID_REFERENCETYPE_DESCRIPTOR__ID;
 			offset = endOfConstantPool + 4 + (i << 1);
 			goto _errorFound;
