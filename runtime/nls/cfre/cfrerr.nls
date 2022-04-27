@@ -1691,3 +1691,17 @@ J9NLS_CFR_ERR_INNER_CLASS_REFERENCE_TYPE=Inner class info cannot be a referencet
 J9NLS_CFR_ERR_INNER_CLASS_REFERENCE_TYPE.explanation=Please consult the Java Virtual Machine Specification for a detailed explanation.
 J9NLS_CFR_ERR_INNER_CLASS_REFERENCE_TYPE.system_action=The JVM will throw a verification or classloading-related exception such as java.lang.ClassFormatError.
 J9NLS_CFR_ERR_INNER_CLASS_REFERENCE_TYPE.user_response=Contact the provider of the classfile for a corrected version.
+
+delpls1=delpls
+# START NON-TRANSLATABLE
+delpls1.explanation=Please consult the Java Virtual Machine Specification for a detailed explanation.
+delpls1.system_action=The JVM will throw a verification or class loading-related exception such as java.lang.ClassFormatError.
+delpls1.user_response=Contact the provider of the class file for a corrected version.
+# END NON-TRANSLATABLE
+
+delpls2=delpls
+# START NON-TRANSLATABLE
+delpls2.explanation=Please consult the Java Virtual Machine Specification for a detailed explanation.
+delpls2.system_action=The JVM will throw a verification or class loading-related exception such as java.lang.ClassFormatError.
+delpls2.user_response=Contact the provider of the class file for a corrected version.
+# END NON-TRANSLATABLE

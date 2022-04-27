@@ -2730,7 +2730,7 @@ checkClass(J9PortLibrary *portLib, J9CfrClassFile* classfile, U_8* segment, U_32
 
 #if defined(J9VM_OPT_VALHALLA_VALUE_TYPES)
 		if (bcvCheckName(&classfile->constantPool[superClassInfo->slot1])) {
-			errorCode = J9NLS_INVALID_REFERENCETYPE_DESCRIPTOR__ID;
+			errorCode = delpls1__ID;
 			offset = endOfConstantPool + 4;
 			goto _errorFound;
 		}
@@ -2764,7 +2764,7 @@ checkClass(J9PortLibrary *portLib, J9CfrClassFile* classfile, U_8* segment, U_32
 		}
 #if defined(J9VM_OPT_VALHALLA_VALUE_TYPES)
 		if (bcvCheckName(&classfile->constantPool[cpInfo->slot1])) {
-			errorCode = J9NLS_INVALID_REFERENCETYPE_DESCRIPTOR__ID;
+			errorCode = delpls2__ID;
 			offset = endOfConstantPool + 4 + (i << 1);
 			goto _errorFound;
 		}
