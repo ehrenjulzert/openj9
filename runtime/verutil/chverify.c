@@ -212,3 +212,29 @@ I_32
 bcvCheckName (J9CfrConstantPoolInfo * info) {
 	return checkNameImpl(info, FALSE, FALSE, FALSE);
 }
+
+#if defined(J9VM_OPT_VALHALLA_VALUE_TYPES)
+/**
+ * Determines if the info parameter is a referencetype descriptor
+ *
+ * @param info The J9CfrConstantPoolInfo to check
+ * @returns TRUE if info is a referencetype descriptor, FALSE otherwise
+ */
+BOOLEAN
+bcvIsReferenceTypeDescriptor(J9CfrConstantPoolInfo * info) {
+	U_32 length = info->slot1;
+	U_8 *bytes = info->bytes;
+	BOOLEAN result = FALSE;
+
+	if (length <= 1) {
+		result = FALSE;
+	} else if (
+		('[' == bytes[0]) ||
+		((';' == bytes[length - 1]) && (('L' == bytes[0]) || ('Q' == bytes[0])))
+	) {
+		result = TRUE;
+	}
+
+	return result;
+}
+#endif /* defined(J9VM_OPT_VALHALLA_VALUE_TYPES) */

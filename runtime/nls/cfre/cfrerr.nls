@@ -1668,3 +1668,52 @@ J9NLS_CFR_ERR_INIT_ON_VALUE_CLASS.explanation=Please consult the Java Virtual Ma
 J9NLS_CFR_ERR_INIT_ON_VALUE_CLASS.system_action=The JVM will throw a verification or class loading-related exception such as java.lang.ClassFormatError.
 J9NLS_CFR_ERR_INIT_ON_VALUE_CLASS.user_response=Contact the provider of the class file for a corrected version.
 # END NON-TRANSLATABLE
+
+J9NLS_INVALID_REFERENCETYPE_DESCRIPTOR=A ReferenceType descriptor cannot be referenced by a CONSTANT_Class_info structure that represents this_class, super_class, or the interfaces array
+# START NON-TRANSLATABLE
+J9NLS_INVALID_REFERENCETYPE_DESCRIPTOR.explanation=Please consult the Java Virtual Machine Specification for a detailed explanation.
+J9NLS_INVALID_REFERENCETYPE_DESCRIPTOR.system_action=The JVM will throw a verification or class loading-related exception such as java.lang.ClassFormatError.
+J9NLS_INVALID_REFERENCETYPE_DESCRIPTOR.user_response=Contact the provider of the class file for a corrected version.
+# END NON-TRANSLATABLE
+
+J9NLS_CFR_ERR_CATCH_IS_REFERENCE_TYPE_DESCRIPTOR=Exception handler type cannot be a reference type descriptor
+# START NON-TRANSLATABLE
+J9NLS_CFR_ERR_CATCH_IS_REFERENCE_TYPE_DESCRIPTOR.explanation=Please consult the Java Virtual Machine Specification for a detailed explanation.
+J9NLS_CFR_ERR_CATCH_IS_REFERENCE_TYPE_DESCRIPTOR.system_action=The JVM will throw a verification or classloading-related exception such as java.lang.ClassFormatError.
+J9NLS_CFR_ERR_CATCH_IS_REFERENCE_TYPE_DESCRIPTOR.user_response=Contact the provider of the classfile for a corrected version.
+
+J9NLS_CFR_ERR_EXCEPTION_IS_REFERENCE_TYPE_DESCRIPTOR=Exception type cannot be a reference type descriptor
+# START NON-TRANSLATABLE
+J9NLS_CFR_ERR_EXCEPTION_IS_REFERENCE_TYPE_DESCRIPTOR.explanation=Please consult the Java Virtual Machine Specification for a detailed explanation.
+J9NLS_CFR_ERR_EXCEPTION_IS_REFERENCE_TYPE_DESCRIPTOR.system_action=The JVM will throw a verification or classloading-related exception such as java.lang.ClassFormatError.
+J9NLS_CFR_ERR_EXCEPTION_IS_REFERENCE_TYPE_DESCRIPTOR.user_response=Contact the provider of the classfile for a corrected version.
+
+J9NLS_CFR_ERR_INNER_CLASS_REFERENCE_TYPE=Inner class info cannot be a referencetype descriptor
+# START NON-TRANSLATABLE
+J9NLS_CFR_ERR_INNER_CLASS_REFERENCE_TYPE.explanation=Please consult the Java Virtual Machine Specification for a detailed explanation.
+J9NLS_CFR_ERR_INNER_CLASS_REFERENCE_TYPE.system_action=The JVM will throw a verification or classloading-related exception such as java.lang.ClassFormatError.
+J9NLS_CFR_ERR_INNER_CLASS_REFERENCE_TYPE.user_response=Contact the provider of the classfile for a corrected version.
+
+J9NLS_CFR_ERR_ENCLOSING_METHOD_CLASS_INDEX_IS_REFERENCE_TYPE=The class index of an enclosing method cannot be a referencetype descriptor
+# START NON-TRANSLATABLE
+J9NLS_CFR_ERR_ENCLOSING_METHOD_CLASS_INDEX_IS_REFERENCE_TYPE.explanation=Please consult the Java Virtual Machine Specification for a detailed explanation.
+J9NLS_CFR_ERR_ENCLOSING_METHOD_CLASS_INDEX_IS_REFERENCE_TYPE.system_action=The JVM will throw a verification or classloading-related exception such as java.lang.ClassFormatError.
+J9NLS_CFR_ERR_ENCLOSING_METHOD_CLASS_INDEX_IS_REFERENCE_TYPE.user_response=Contact the provider of the classfile for a corrected version.
+
+NEST_HOST_INVALID_REFERENCE_TYPE_DESCRIPTOR=Neither the host class index of a nethost attribute nor its nest member classes can be referencetype descriptors
+# START NON-TRANSLATABLE
+NEST_HOST_INVALID_REFERENCE_TYPE_DESCRIPTOR.explanation=Please consult the Java Virtual Machine Specification for a detailed explanation.
+NEST_HOST_INVALID_REFERENCE_TYPE_DESCRIPTOR.system_action=The JVM will throw a verification or classloading-related exception such as java.lang.ClassFormatError.
+NEST_HOST_INVALID_REFERENCE_TYPE_DESCRIPTOR.user_response=Contact the provider of the classfile for a corrected version.
+
+NEW_INVALID_REFERENCE_TYPE_DESCRIPTOR=The new instruction cannot operate on a referencetype descriptor
+# START NON-TRANSLATABLE
+NEW_INVALID_REFERENCE_TYPE_DESCRIPTOR.explanation=Please consult the Java Virtual Machine Specification for a detailed explanation.
+NEW_INVALID_REFERENCE_TYPE_DESCRIPTOR.system_action=The JVM will throw a verification or classloading-related exception such as java.lang.ClassFormatError.
+NEW_INVALID_REFERENCE_TYPE_DESCRIPTOR.user_response=Contact the provider of the classfile for a corrected version.
+
+ACONST_INIT_INVALID_ARRAY=The aconst_init instruction cannot operate on an array
+# START NON-TRANSLATABLE
+ACONST_INIT_INVALID_ARRAY.explanation=Please consult the Java Virtual Machine Specification for a detailed explanation.
+ACONST_INIT_INVALID_ARRAY.system_action=The JVM will throw a verification or classloading-related exception such as java.lang.ClassFormatError.
+ACONST_INIT_INVALID_ARRAY.user_response=Contact the provider of the classfile for a corrected version.

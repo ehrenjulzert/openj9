@@ -103,7 +103,6 @@
 			<variation>-Xnocompressedrefs -XX:-EnableArrayFlattening</variation>
 		</variations>
 		<command>$(JAVA_COMMAND) $(JVM_OPTIONS) \
-		-Xverify:none \
 		-Xint \
 		--add-opens java.base/jdk.internal.misc=ALL-UNNAMED \
 		-cp $(Q)$(LIB_DIR)$(D)asm.jar$(P)$(RESOURCES_DIR)$(P)$(TESTNG)$(P)$(TEST_RESROOT)$(D)ValhallaTests.jar$(Q) \
