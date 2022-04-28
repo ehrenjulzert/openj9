@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 1991, 2021 IBM Corp. and others
+ * Copyright (c) 1991, 2022 IBM Corp. and others
  *
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which accompanies this
@@ -256,8 +256,16 @@ buildStackFromMethodSignature( J9BytecodeVerificationData *verifyData, UDATA **s
 		/* In the <init> method of Object the type of this is Object.  In other <init> methods, the type of this is uninitializedThis */
 		if ((J9UTF8_DATA(utf8string)[0] == '<')	&& (J9UTF8_DATA(utf8string)[1] == 'i') && (classIndex != BCV_JAVA_LANG_OBJECT_INDEX)) {
 			/* This is <init>, not java/lang/Object */
-			PUSH(BCV_SPECIAL_INIT | (classIndex << BCV_CLASS_INDEX_SHIFT));
+#if defined(J9VM_OPT_VALHALLA_VALUE_TYPES)
+			if (J9_ARE_ALL_BITS_SET(romClass->modifiers, J9AccPrimitiveValueType)) { /* This is temporary and will have to be changed when <vnew> is introduced */
+				PUSH(BCV_PRIMITIVE_CLASS | BCV_SPECIAL_INIT | (classIndex << BCV_CLASS_INDEX_SHIFT));
+			} else {
+#endif /* #if defined(J9VM_OPT_VALHALLA_VALUE_TYPES) */
+				PUSH(BCV_SPECIAL_INIT | (classIndex << BCV_CLASS_INDEX_SHIFT));
+#if defined(J9VM_OPT_VALHALLA_VALUE_TYPES)
+			}
 			isUninitializedThis = TRUE;
+#endif /* #if defined(J9VM_OPT_VALHALLA_VALUE_TYPES) */
 		} else {
 			PUSH(BCV_GENERIC_OBJECT | (classIndex << BCV_CLASS_INDEX_SHIFT));
 		}
@@ -282,6 +290,7 @@ buildStackFromMethodSignature( J9BytecodeVerificationData *verifyData, UDATA **s
 		if (IS_REF_OR_VAL_SIGNATURE(args[i])) {
 			U_8 *string;
 			U_16 length = 0;
+			UDATA type = IS_QTYPE(args[i]) ? BCV_PRIMITIVE_CLASS : BCV_GENERIC_OBJECT;
 
 			i++;
 			string = &args[i];	/* remember the start of the string */
@@ -289,7 +298,7 @@ buildStackFromMethodSignature( J9BytecodeVerificationData *verifyData, UDATA **s
 				i++;
 				length++;
 			}
-			classIndex = convertClassNameToStackMapType(verifyData, string, length, 0, arity);
+			classIndex = convertClassNameToStackMapType(verifyData, string, length, type, arity);
 			PUSH(classIndex | (arity << BCV_ARITY_SHIFT));
 		} else {
 			if (arity) {
@@ -466,8 +475,13 @@ isClassCompatible(J9BytecodeVerificationData *verifyData, UDATA sourceClass, UDA
 		return (IDATA) TRUE;
 	}
 
-	/* NULL is magically compatible */
+	/* NULL is compatible with all non primitive classes */
 	if( sourceClass == BCV_BASE_TYPE_NULL ) {
+#if defined(J9VM_OPT_VALHALLA_VALUE_TYPES)
+		if (J9_ARE_ALL_BITS_SET(targetClass, BCV_PRIMITIVE_CLASS)) {
+			return (IDATA) FALSE;
+		}
+#endif /* J9VM_OPT_VALHALLA_VALUE_TYPES */
 		return (IDATA) TRUE;
 	}
 
