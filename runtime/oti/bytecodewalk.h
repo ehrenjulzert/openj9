@@ -84,6 +84,7 @@ base types: (in the 19bit class index field)
 #define BCV_CLASS_INDEX_SHIFT				5
 
 #define BCV_GENERIC_OBJECT					0
+#define BCV_PRIMITIVE_CLASS					0x2000
 
 /* Defines the class index into the classNameList.  The order
  * must match vrfyhelp.c: initializeClassNameList()
