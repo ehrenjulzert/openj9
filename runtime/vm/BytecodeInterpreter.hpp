@@ -4100,10 +4100,11 @@ done:
 		/* TODO (#14073): update this function to have the same behavior as OpenJDK when cls is null or not a vlauetype (currently OpenJDK segfaults in both those scenarios) */
 		if (NULL != cls) {
 			J9Class *j9clazz = J9VM_J9CLASS_FROM_HEAPCLASS(_currentThread, cls);
-			if (J9_IS_J9CLASS_PRIMITIVE_VALUETYPE(j9clazz)) {
-				/* It is defaultValue for primitive value type, NULL for value class. */
-				result = j9clazz->flattenedClassCache->defaultValue;
-			}
+			result = *getDefaultValueSlotAddress(j9clazz);
+			//if (J9_IS_J9CLASS_PRIMITIVE_VALUETYPE(j9clazz)) {
+			//	/* It is defaultValue for primitive value type, NULL for value class. */
+			//	result = j9clazz->flattenedClassCache->defaultValue;
+			//}
 		}
 
 		returnObjectFromINL(REGISTER_ARGS, result, 2);
