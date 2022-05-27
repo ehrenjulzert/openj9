@@ -1761,6 +1761,27 @@ _illegalPrimitiveReturn:
 						goto _miscError;
 					}
 					break;
+
+#if defined(J9VM_OPT_VALHALLA_VALUE_TYPES)
+					utf8string = ((J9UTF8 *) (J9ROMNAMEANDSIGNATURE_SIGNATURE(J9ROMMETHODREF_NAMEANDSIGNATURE((J9ROMMethodRef *) info))));
+					rc = j9rtv_verifyArguments(verifyData, utf8string, &stackTop);
+					
+					CHECK_STACK_UNDERFLOW;
+					if (BCV_ERR_INSUFFICIENT_MEMORY == rc) {
+						goto _outOfMemoryError;
+					}
+
+					inconsistentStack |= (BCV_SUCCESS != rc);
+					if (inconsistentStack) {
+						if (verifyData->errorDetailCode < 0) {
+							J9UTF8 * utf8ClassString = J9ROMCLASSREF_NAME((J9ROMClassRef *) &constantPool[((J9ROMMethodRef *) info)->classRefCPIndex]);
+							J9UTF8 * utf8MethodString = ((J9UTF8 *) (J9ROMNAMEANDSIGNATURE_NAME(J9ROMMETHODREF_NAMEANDSIGNATURE((J9ROMMethodRef *) info))));
+							storeMethodInfo(verifyData, utf8ClassString, utf8MethodString, utf8string, start);
+						}
+						errorType = J9NLS_BCV_ERR_INCONSISTENT_STACK__ID;
+						goto _verifyError;
+					}
+#endif /* #if defined(J9VM_OPT_VALHALLA_VALUE_TYPES) */
 				}
 
 				if (bc != JBinvokeinterface) {
@@ -2625,11 +2646,12 @@ j9rtv_verifyArguments (J9BytecodeVerificationData *verifyData, J9UTF8 * utf8stri
 
 			/* Object array */
 			if (IS_REF_OR_VAL_SIGNATURE(*signature)) {
+				UDATA type = IS_QTYPE(*signature) ? BCV_PRIMITIVE_CLASS : BCV_OBJECT_OR_ARRAY;
 				signature++;
 				string = signature;	/* remember the start of the string */
 				while (*signature++ != ';');
 				length = (U_16) (signature - string - 1);
-				objectType = convertClassNameToStackMapType(verifyData, string, length, 0, arity);
+				objectType = convertClassNameToStackMapType(verifyData, string, length, type, arity);
 
 			/* Base type array */
 			} else {
