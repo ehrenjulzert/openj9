@@ -435,6 +435,12 @@ getBCVDataType(J9BytecodeVerificationData* verifyData, MethodContextInfo* method
 		UDATA convertedType = (UDATA)decodeTable[bytecodeTypeInfo];
 		typeNameIndex = CFR_STACKMAP_TYPE_OBJECT;
 
+#if defined(J9VM_OPT_VALHALLA_VALUE_TYPES)
+		if (bcvType & BCV_PRIMITIVE_CLASS) {
+		   typeNameIndex = CFR_STACKMAP_TYPE_PRIMITIVE_OBJECT;
+		}
+#endif /* #if defined(J9VM_OPT_VALHALLA_VALUE_TYPES) */
+
 		/* Set the expected type to 'reference' if the type data extracted from bytecode is 'reference' type.
 		 * Note: according to the JVM Specification, the expected type for aastore is 'java/lang/Object' rather than 'reference'.
 		 */

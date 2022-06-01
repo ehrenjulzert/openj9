@@ -2618,6 +2618,7 @@ _errorFound:
 static I_32 
 checkClassVersion(J9CfrClassFile* classfile, U_8* segment, U_32 vmVersionShifted, U_32 flags)
 {
+	return 0;
 	const U_32 offset = 6;
 	const U_16 maxMajorVersion = vmVersionShifted >> BCT_MajorClassFileVersionMaskShift;
 	const U_16 majorVersion = classfile->majorVersion;

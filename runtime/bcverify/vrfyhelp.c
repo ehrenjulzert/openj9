@@ -359,11 +359,13 @@ pushFieldType(J9BytecodeVerificationData *verifyData, J9UTF8 * utf8string, UDATA
 UDATA *
 pushClassType(J9BytecodeVerificationData * verifyData, J9UTF8 * utf8string, UDATA * stackTop)
 {
-	if (J9UTF8_DATA(utf8string)[0] == '[') {
+	U_8 firstChar = J9UTF8_DATA(utf8string)[0];
+	if (firstChar == '[') {
 		UDATA arrayType = parseObjectOrArrayName(verifyData, J9UTF8_DATA(utf8string));
 		PUSH(arrayType);
 	} else {
-		PUSH(convertClassNameToStackMapType(verifyData, J9UTF8_DATA(utf8string),J9UTF8_LENGTH(utf8string), BCV_OBJECT_OR_ARRAY, 0));
+		UDATA type = IS_QTYPE(firstChar) ? BCV_PRIMITIVE_CLASS : BCV_OBJECT_OR_ARRAY;
+		PUSH(convertClassNameToStackMapType(verifyData, J9UTF8_DATA(utf8string),J9UTF8_LENGTH(utf8string), type, 0));
 	}
 
 	return stackTop;
@@ -762,9 +764,9 @@ isClassCompatibleByName(J9BytecodeVerificationData *verifyData, UDATA sourceClas
 
 	*reasonCode = 0;
 
-	/* NULL is magically compatible */
-	if( sourceClass == BCV_BASE_TYPE_NULL ) 
-		return (IDATA) TRUE;
+	/* NULL is compatible with non Q type classes */
+	if( sourceClass == BCV_BASE_TYPE_NULL) 
+		return (IDATA) !IS_QTYPE(*targetClassName);
 
 	/* If the source is special, or a base type -- fail */
 	if( sourceClass & BCV_BASE_OR_SPECIAL ) 
@@ -773,7 +775,8 @@ isClassCompatibleByName(J9BytecodeVerificationData *verifyData, UDATA sourceClas
 	if (*targetClassName == '[') {
 		index = parseObjectOrArrayName(verifyData, targetClassName);
 	} else {
-		index = convertClassNameToStackMapType(verifyData, targetClassName, (U_16)targetClassNameLength, 0, 0);
+		UDATA type = IS_QTYPE(*targetClassName) ? BCV_PRIMITIVE_CLASS : BCV_OBJECT_OR_ARRAY;
+		index = convertClassNameToStackMapType(verifyData, targetClassName, (U_16)targetClassNameLength, type, 0);
 	}
 
 	return isClassCompatible(verifyData, sourceClass, index, reasonCode);
