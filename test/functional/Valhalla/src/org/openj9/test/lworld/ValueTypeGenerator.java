@@ -1222,7 +1222,25 @@ public class ValueTypeGenerator extends ClassLoader {
 			classConfig.setNestHost(nestHost);
 		}
 
+		
 		byte[] bytes = generateClass(classConfig);
+
+		if (name.equals("ValueInt")) {
+			/*byte[] injected = new byte[] { (byte)0xc0, (byte)0x00, (byte)0x04 };
+			int injectionPoint = 1421;
+
+			byte[] ogBytes = bytes;
+			bytes = new byte[ogBytes.length + injected.length];
+			System.arraycopy(ogBytes, 0, bytes, 0, injectionPoint);
+			System.arraycopy(injected, 0, bytes, injectionPoint, injected.length);
+			System.arraycopy(ogBytes, injectionPoint, bytes, injectionPoint + injected.length, ogBytes.length - injectionPoint);*/
+
+			try (FileOutputStream fos = new FileOutputStream("/Users/ehren/Documents/classes_dump/" + name + ".class")) {
+				fos.write(bytes);
+				System.out.println("Wrote " + name + ".class");
+			}
+		}
+
 		return generator.defineClass(name, bytes, 0, bytes.length);
 	}
 
