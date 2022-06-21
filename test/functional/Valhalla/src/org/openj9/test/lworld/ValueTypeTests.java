@@ -1378,8 +1378,9 @@ public class ValueTypeTests {
 	@Test(priority=1)
 	static public void testCreateValueInt() throws Throwable {
 		String fields[] = {"i:I"};
-		valueIntClass = ValueTypeGenerator.generateValueClass("ValueInt", fields);
+		valueIntClass = ValueTypeGenerator.generateValueClass("ValueInt", fields); //ValueTypeGenerator.generateVerifiableValueClass("ValueInt", fields);
 
+		//makeValueInt = lookup.findStatic(valueIntClass, "makeValue", MethodType.methodType(valueIntClass, int.class));
 		makeValueInt = lookup.findStatic(valueIntClass, "makeValueGeneric", MethodType.methodType(Object.class, Object.class));
 
 		/* Replace typed getters/setters/withers to generic due to current lack of support for ValueTypes and OJDK method handles */

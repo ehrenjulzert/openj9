@@ -190,7 +190,7 @@ public class ValueTypeGenerator extends ClassLoader {
 		}
 	}
 
-	private static byte[] generateClass(ClassConfiguration config) {
+	private static byte[] generateClass(ClassConfiguration config) { // tag
 		String className = config.getName();
 		String superName = config.getSuperName();
 		String[] fields = config.getFields();
@@ -344,7 +344,7 @@ public class ValueTypeGenerator extends ClassLoader {
 			generateSetterStatic(cw, nameAndSigValue, className);
 			generateGetterStatic(cw, nameAndSigValue, className);
 			if (!isVerifiable) {
-				generateStaticSetterGeneric(cw, nameAndSigValue, className);
+				//generateStaticSetterGeneric(cw, nameAndSigValue, className);
 				generateStaticGetterGeneric(cw, nameAndSigValue, className);
 			}
 		} else {
@@ -354,7 +354,7 @@ public class ValueTypeGenerator extends ClassLoader {
 			if (!isVerifiable) {
 				generateGetterGeneric(cw, nameAndSigValue, className);
 				generateWitherGeneric(cw, nameAndSigValue, className, isRef);
-				generateSetterGeneric(cw, nameAndSigValue, className);
+				//generateSetterGeneric(cw, nameAndSigValue, className);
 			}
 		}
 	}
