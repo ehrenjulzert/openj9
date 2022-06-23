@@ -1488,8 +1488,7 @@ checkPool(J9CfrClassFile* classfile, U_8* segment, U_8* poolStart, I_32 *maxBoot
 				errorCode = J9NLS_CFR_ERR_BAD_INDEX__ID;
 				goto _errorFound;
 			}
-			utf8 = &cpBase[info->slot2];
-			if (utf8->tag != CFR_CONSTANT_Utf8) {
+			if (cpBase[info->slot2].tag != CFR_CONSTANT_Utf8) {
 				errorCode = J9NLS_CFR_ERR_BAD_DESCRIPTOR_INDEX__ID;
 				goto _errorFound;
 			}
@@ -1502,8 +1501,7 @@ checkPool(J9CfrClassFile* classfile, U_8* segment, U_8* poolStart, I_32 *maxBoot
 				errorCode = J9NLS_CFR_ERR_BAD_INDEX__ID;
 				goto _errorFound;
 			}
-			utf8 = &cpBase[info->slot1];
-			if (utf8->tag != CFR_CONSTANT_Utf8) {
+			if (cpBase[info->slot1].tag != CFR_CONSTANT_Utf8) {
 				errorCode = J9NLS_CFR_ERR_BAD_DESCRIPTOR_INDEX__ID;
 				goto _errorFound;
 			}

@@ -265,8 +265,8 @@ buildStackFromMethodSignature( J9BytecodeVerificationData *verifyData, UDATA **s
 				PUSH(BCV_SPECIAL_INIT | (classIndex << BCV_CLASS_INDEX_SHIFT));
 #if defined(J9VM_OPT_VALHALLA_VALUE_TYPES)
 			}
-			isUninitializedThis = TRUE;
 #endif /* #if defined(J9VM_OPT_VALHALLA_VALUE_TYPES) */
+			isUninitializedThis = TRUE;
 		} else {
 			PUSH(BCV_GENERIC_OBJECT | (classIndex << BCV_CLASS_INDEX_SHIFT));
 		}
