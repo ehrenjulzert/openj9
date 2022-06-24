@@ -2269,7 +2269,7 @@ checkAttributes(J9PortLibrary* portLib, J9CfrClassFile* classfile, J9CfrAttribut
 #if defined(J9VM_OPT_VALHALLA_VALUE_TYPES)
 						bcvIsReferenceTypeDescriptor(classInfoUtf8)
 #else /* #if defined(J9VM_OPT_VALHALLA_VALUE_TYPES) */
-						('[' == outerClassInfoUtf8->bytes[0])
+						('[' == classInfoUtf8->bytes[0])
 #endif /* #if defined(J9VM_OPT_VALHALLA_VALUE_TYPES) */
 					) {
 						errorCode = J9NLS_CFR_ERR_OUTER_CLASS_REFERENCETYPE_DESCRIPTOR__ID;
