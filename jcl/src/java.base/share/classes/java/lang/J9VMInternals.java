@@ -488,6 +488,10 @@ final class J9VMInternals {
 		return identityHashCode(anObject);
 	}
 
+	/*[IF INLINE-TYPES]*/
+	static native int valueHashCode(Object anObject);
+	/*[ENDIF INLINE-TYPES]*/
+
 	/**
 	 * Answers an integer hash code for the parameter.
 	 * The hash code returned is the same one that would

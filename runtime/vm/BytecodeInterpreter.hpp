@@ -2835,6 +2835,19 @@ done:
 		returnSingleFromINL(REGISTER_ARGS, (isValue ? 1 : 0), 1);
 		return EXECUTE_BYTECODE;
 	}
+
+	/* java.lang.J9VMInternals: static native int valueHashCode(Object anObject); */
+	VMINLINE VM_BytecodeAction
+	inlInternalsValueHashCode(REGISTER_ARGS_LIST)
+	{
+		J9_DECLARE_CONSTANT_UTF8(methodName, "primitiveObjectHashCode");
+		J9_DECLARE_CONSTANT_UTF8(methodSig, "(Ljava/lang/Object;)I");
+		J9NameAndSignature nas = { (J9UTF8 *)&methodName, (J9UTF8 *)&methodSig };
+
+		runStaticMethod(_currentThread, (U_8 *)"java/lang/runtime/PrimitiveObjectMethods", &nas, 1, (UDATA *)_sp);
+		returnSingleFromINL(REGISTER_ARGS, (I_32)_currentThread->returnValue, 1);
+		return EXECUTE_BYTECODE;
+	}
 #endif /* J9VM_OPT_VALHALLA_VALUE_TYPES */
 
 	/* java.lang.Class: public native boolean isInstance(Object object); */
@@ -9878,6 +9891,7 @@ public:
 #if defined(J9VM_OPT_VALHALLA_VALUE_TYPES)
 		JUMP_TABLE_ENTRY(J9_BCLOOP_SEND_TARGET_INL_CLASS_IS_PRIMITIVE_CLASS),
 		JUMP_TABLE_ENTRY(J9_BCLOOP_SEND_TARGET_INL_CLASS_IS_VALUE),
+		JUMP_TABLE_ENTRY(J9_BCLOOP_SEND_TARGET_INL_INTERNALS_VALUEHASHCODE),
 #endif /* J9VM_OPT_VALHALLA_VALUE_TYPES */
 		JUMP_TABLE_ENTRY(J9_BCLOOP_SEND_TARGET_INL_CLASS_GET_MODIFIERS_IMPL),
 		JUMP_TABLE_ENTRY(J9_BCLOOP_SEND_TARGET_INL_CLASS_GET_COMPONENT_TYPE),
@@ -10396,6 +10410,8 @@ runMethod: {
 		PERFORM_ACTION(inlClassIsPrimitiveClass(REGISTER_ARGS));
 	JUMP_TARGET(J9_BCLOOP_SEND_TARGET_INL_CLASS_IS_VALUE):
 		PERFORM_ACTION(inlClassIsValue(REGISTER_ARGS));
+	JUMP_TARGET(J9_BCLOOP_SEND_TARGET_INL_INTERNALS_VALUEHASHCODE):
+		PERFORM_ACTION(inlInternalsValueHashCode(REGISTER_ARGS));
 #endif /* J9VM_OPT_VALHALLA_VALUE_TYPES */
 	JUMP_TARGET(J9_BCLOOP_SEND_TARGET_INL_CLASS_GET_MODIFIERS_IMPL):
 		PERFORM_ACTION(inlClassGetModifiersImpl(REGISTER_ARGS));
