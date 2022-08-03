@@ -154,6 +154,8 @@ SPDX-License-Identifier: EPL-2.0 OR Apache-2.0 OR GPL-2.0 WITH Classpath-excepti
 	<classref name="org/eclipse/openj9/criu/JVMCheckpointException" flags="opt_criuSupport"/>
 	<classref name="org/eclipse/openj9/criu/RestoreException" flags="opt_criuSupport"/>
 
+	<classref name="java/lang/runtime/PrimitiveObjectMethods" flags="opt_valhallaValueTypes"/>
+
 <!--
 	NOTE: the resolution code in jclcinit.c only looks at the J9ROMClassRef->runtimeFlags to determine
 	whether or not to attempt the class load.  The flags sepcified on the fields are ignored.
@@ -424,6 +426,7 @@ SPDX-License-Identifier: EPL-2.0 OR Apache-2.0 OR GPL-2.0 WITH Classpath-excepti
 	<specialmethodref class="java/lang/Thread" name="uncaughtException" signature="(Ljava/lang/Throwable;)V"/>
 	<specialmethodref class="java/lang/Thread" name="&lt;init>" signature="(Ljava/lang/String;Ljava/lang/Object;IZ)V"/>
 	<staticmethodref class="java/lang/ClassLoader" name="findNative" signature="(Ljava/lang/ClassLoader;Ljava/lang/String;)J" versions="17-"/>
+	<staticmethodref class="java/lang/runtime/PrimitiveObjectMethods" name="primitiveObjectHashCode" signature="(Ljava/lang/Object;)I" flags="opt_valhallaValueTypes"/>
 
 	<fieldref class="java/lang/J9VMInternals$ClassInitializationLock" name="theClass" signature="Ljava/lang/Class;"/>
 

@@ -2840,13 +2840,18 @@ done:
 	VMINLINE VM_BytecodeAction
 	inlInternalsValueHashCode(REGISTER_ARGS_LIST)
 	{
-		J9_DECLARE_CONSTANT_UTF8(methodName, "primitiveObjectHashCode");
-		J9_DECLARE_CONSTANT_UTF8(methodSig, "(Ljava/lang/Object;)I");
-		J9NameAndSignature nas = { (J9UTF8 *)&methodName, (J9UTF8 *)&methodSig };
+		J9Method *primitiveObjectHashCodeMethod = NULL;
+		J9Class *primitiveObjectMethods = J9VMCONSTANTPOOL_CLASSREF_AT(_vm, J9VMCONSTANTPOOL_JAVALANGRUNTIMEPRIMITIVEOBJECTMETHODS)->value;
+		VM_BytecodeAction rc = initializeClassIfNeeded(REGISTER_ARGS, primitiveObjectMethods);
+		if (J9_UNEXPECTED(EXECUTE_BYTECODE != rc)) {
+			goto done;
+		}
 
-		runStaticMethod(_currentThread, (U_8 *)"java/lang/runtime/PrimitiveObjectMethods", &nas, 1, (UDATA *)_sp);
+		primitiveObjectHashCodeMethod = J9VMJAVALANGRUNTIMEPRIMITIVEOBJECTMETHODS_PRIMITIVEOBJECTHASHCODE_METHOD(_vm);
+		internalRunStaticMethod(_currentThread, primitiveObjectHashCodeMethod, TRUE, 1, (UDATA *)_sp);
 		returnSingleFromINL(REGISTER_ARGS, (I_32)_currentThread->returnValue, 1);
-		return EXECUTE_BYTECODE;
+done:
+		return rc;
 	}
 #endif /* J9VM_OPT_VALHALLA_VALUE_TYPES */
 
