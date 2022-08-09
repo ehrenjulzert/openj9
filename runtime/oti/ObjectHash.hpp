@@ -36,6 +36,7 @@
 #include "j9.h"
 #include "j9accessbarrier.h"
 #include "j9consts.h"
+#include "j9protos.h"
 #include "AtomicSupport.hpp"
 #include "VMHelpers.hpp"
 
@@ -203,7 +204,6 @@ public:
 		return inlineConvertValueToHash(vm, (UDATA)objectPointer);
 	}
 
-
 	/**
 	 * Fetch objectPointer's hashcode
 	 *
@@ -214,6 +214,26 @@ public:
 	 */
 	static VMINLINE I_32
 	inlineObjectHashCode(J9JavaVM *vm, j9object_t objectPointer)
+	{
+		return inlineObjectHashCodeHelper(vm, objectPointer, false);
+	}
+
+	static VMINLINE I_32
+	inlineValueTypeHashCode(J9JavaVM *vm, j9object_t objectPointer)
+	{
+		return inlineObjectHashCodeHelper(vm, objectPointer, true);
+	}
+
+	/**
+	 * Fetch objectPointer's hashcode
+	 *
+	 * @pre objectPointer must be a valid object reference
+	 *
+	 * @param vm			a java VM
+	 * @param objectPointer 	a valid object reference.
+	 */
+	static VMINLINE I_32
+	inlineObjectHashCodeHelper(J9JavaVM *vm, j9object_t objectPointer, bool isValueType)
 	{
 		I_32 hashValue = 0;
 		if (VM_VMHelpers::mustCallWriteAccessBarrier(vm)) {
@@ -266,10 +286,30 @@ public:
 				if (J9_ARE_NO_BITS_SET(flags, OBJECT_HEADER_HAS_BEEN_HASHED_IN_CLASS)) {
 					setHasBeenHashed(vm, objectPointer);
 				}
-				hashValue = inlineConvertValueToHash(vm, (UDATA)objectPointer);
+				if (!isValueType) {
+					hashValue = inlineConvertValueToHash(vm, (UDATA)objectPointer);
+				} else {
+					J9VMThread *currentThread = vm->internalVMFunctions->currentVMThread(vm);
+					J9_DECLARE_CONSTANT_UTF8(methodName, "primitiveObjectHashCode");
+					J9_DECLARE_CONSTANT_UTF8(methodSig, "(Ljava/lang/Object;)I");
+					J9NameAndSignature nas = { (J9UTF8 *)&methodName, (J9UTF8 *)&methodSig };
+					UDATA args[] = { (UDATA) objectPointer };
+					runStaticMethod(currentThread, (U_8 *)"java/lang/runtime/PrimitiveObjectMethods", &nas, 1, args);
+					hashValue = (I_32)currentThread->returnValue;
+				}
 			}
 #else /* defined(J9VM_GC_MODRON_COMPACTION) || defined(J9VM_GC_GENERATIONAL) */
-			hashValue = inlineConvertValueToHash(vm, (UDATA)objectPointer);
+			if (!isValueType) {
+				hashValue = inlineConvertValueToHash(vm, (UDATA)objectPointer);
+			} else {
+				J9VMThread *currentThread = vm->internalVMFunctions->currentVMThread(vm);
+				J9_DECLARE_CONSTANT_UTF8(methodName, "primitiveObjectHashCode");
+				J9_DECLARE_CONSTANT_UTF8(methodSig, "(Ljava/lang/Object;)I");
+				J9NameAndSignature nas = { (J9UTF8 *)&methodName, (J9UTF8 *)&methodSig };
+				UDATA args[] = { (UDATA) objectPointer };
+				runStaticMethod(currentThread, (U_8 *)"java/lang/runtime/PrimitiveObjectMethods", &nas, 1, args);
+				hashValue = (I_32)currentThread->returnValue;
+			}
 #endif /* defined(J9VM_GC_MODRON_COMPACTION) || defined(J9VM_GC_GENERATIONAL) */
 		}
 		return hashValue;

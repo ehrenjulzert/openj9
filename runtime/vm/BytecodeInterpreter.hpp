@@ -2840,18 +2840,11 @@ done:
 	VMINLINE VM_BytecodeAction
 	inlInternalsValueHashCode(REGISTER_ARGS_LIST)
 	{
-		J9Method *primitiveObjectHashCodeMethod = NULL;
-		J9Class *primitiveObjectMethods = J9VMCONSTANTPOOL_CLASSREF_AT(_vm, J9VMCONSTANTPOOL_JAVALANGRUNTIMEPRIMITIVEOBJECTMETHODS)->value;
-		VM_BytecodeAction rc = initializeClassIfNeeded(REGISTER_ARGS, primitiveObjectMethods);
-		if (J9_UNEXPECTED(EXECUTE_BYTECODE != rc)) {
-			goto done;
-		}
-
-		primitiveObjectHashCodeMethod = J9VMJAVALANGRUNTIMEPRIMITIVEOBJECTMETHODS_PRIMITIVEOBJECTHASHCODE_METHOD(_vm);
-		internalRunStaticMethod(_currentThread, primitiveObjectHashCodeMethod, TRUE, 1, (UDATA *)_sp);
-		returnSingleFromINL(REGISTER_ARGS, (I_32)_currentThread->returnValue, 1);
-done:
-		return rc;
+		j9object_t obj = *(j9object_t*)_sp;
+		/* Caller has null-checked obj already */
+		_pc += 3;
+		*(I_32*)_sp = VM_ObjectHash::inlineValueTypeHashCode(_vm, obj);
+		return EXECUTE_BYTECODE;
 	}
 #endif /* J9VM_OPT_VALHALLA_VALUE_TYPES */
 
