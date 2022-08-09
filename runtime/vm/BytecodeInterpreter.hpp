@@ -66,6 +66,8 @@
 #include "LayoutFFITypeHelpers.hpp"
 #endif /* JAVA_SPEC_VERSION >= 16 */
 
+#include <stdio.h>
+
 #if 0
 #define DEBUG_MUST_HAVE_VM_ACCESS(vmThread) Assert_VM_mustHaveVMAccess(vmThread)
 #else
@@ -2841,7 +2843,10 @@ done:
 	inlInternalsValueHashCode(REGISTER_ARGS_LIST)
 	{
 		J9Method *primitiveObjectHashCodeMethod = NULL;
-		J9Class *primitiveObjectMethods = J9VMCONSTANTPOOL_CLASSREF_AT(_vm, J9VMCONSTANTPOOL_JAVALANGRUNTIMEPRIMITIVEOBJECTMETHODS)->value;
+		/*J9VMCONSTANTPOOL_CLASSREF_AT(_vm, J9VMCONSTANTPOOL_JAVALANGRUNTIMEPRIMITIVEOBJECTMETHODS)->value;*/
+		J9Class *primitiveObjectMethods = J9VMCONSTANTPOOL_CLASS_AT(_vm, J9VMCONSTANTPOOL_JAVALANGRUNTIMEPRIMITIVEOBJECTMETHODS);
+		printf("%p\n", (void * )primitiveObjectMethods);
+		printf("%d\n", primitiveObjectMethods == NULL);
 		VM_BytecodeAction rc = initializeClassIfNeeded(REGISTER_ARGS, primitiveObjectMethods);
 		if (J9_UNEXPECTED(EXECUTE_BYTECODE != rc)) {
 			goto done;
