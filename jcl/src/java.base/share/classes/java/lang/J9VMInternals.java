@@ -503,6 +503,51 @@ final class J9VMInternals {
 	 */
 	static native int identityHashCode(Object anObject);
 
+	/*[IF INLINE-TYPES] */
+	/**
+	 * Answers an integer hash code for the parameter.
+	 * The caller must ensure that the parameter is a value type.
+	 * The hash code returned is the same one that would
+	 * be returned by java.lang.Object.hashCode(), assuming
+	 * the object's class has not overridden hashCode() and
+	 * that the parameter is a value type.
+	 *
+	 * @param		anObject	the object
+	 * @return		the hash code for the object
+	 * @throws		InternalError if the object is not a value type
+	 *
+	 * @see			java.lang.Object#hashCode
+	 */
+	static int valueHashCode(Object anObject) {
+		int hashcode = 0;
+
+		try {
+			Class PrimitiveObjectMethods = Class.forName("java.lang.runtime.PrimitiveObjectMethods");
+			Method primitiveObjectHashCode = PrimitiveObjectMethods.getDeclaredMethod("primitiveObjectHashCode", new Class[]{ Object.class });
+			primitiveObjectHashCode.setAccessible(true);
+
+			Object[] args = new Object[]{ anObject };
+			hashcode = (Integer)primitiveObjectHashCode.invoke(null, args);
+		} catch (ClassNotFoundException|NoSuchMethodException|IllegalAccessException|InvocationTargetException e) {
+			throw new InternalError(e);
+		}
+
+		if (positiveOnlyHashcodes()) {
+			hashcode = Math.abs(hashcode);
+		}
+
+		return hashcode;
+	}
+
+	/**
+	 * Returns true if hash codes are positive only,
+	 * false otherwise
+	 *
+	 * @return		A boolean indicating whether hash codes are all positive
+	 */
+	static native boolean positiveOnlyHashcodes();
+	/*[ENDIF] INLINE-TYPES */
+
 	/**
 	 * Primitive implementation of Object.clone().
 	 * Calling with null will cause a crash, so the caller
