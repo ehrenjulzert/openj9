@@ -198,6 +198,9 @@ jvmtiForceEarlyReturn(jvmtiEnv* env,
 						case 'D':
 							methodReturnType = JVMTI_TYPE_JDOUBLE;
 							break;
+#if defined(J9VM_OPT_VALHALLA_VALUE_TYPES)
+						case 'Q': /* fall through */
+#endif /* #if defined(J9VM_OPT_VALHALLA_VALUE_TYPES) */
 						case 'L':
 							methodReturnType = JVMTI_TYPE_JOBJECT;
 							break;

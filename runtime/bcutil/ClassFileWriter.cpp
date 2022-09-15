@@ -1250,10 +1250,13 @@ ClassFileWriter::computeArgsCount(U_16 methodRefIndex)
 			while ((index < count) && ('[' == sig[index])) {
 				index += 1;
 			}
-			if ('L' != sig[index]) {
+			if (('L' != sig[index]) && !IS_QTYPE(sig[index])) {
 				break;
 			}
 			/* fall through */
+#if defined(J9VM_OPT_VALHALLA_VALUE_TYPES)
+		case 'Q': /* fall through */
+#endif /* #if defined(J9VM_OPT_VALHALLA_VALUE_TYPES) */
 		case 'L':
 			index += 1;
 			while ((index < count) && (';' != sig[index])) {

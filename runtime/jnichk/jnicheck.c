@@ -477,7 +477,10 @@ jniCheckCallV(const char* function, JNIEnv* env, jobject receiver, UDATA methodT
 			if (argNum !=3) j9tty_printf(PORTLIB, ", ");
 		}
 		switch (*sigArgs) {
-		case 'L':
+#if defined(J9VM_OPT_VALHALLA_VALUE_TYPES)
+		case 'Q': /* fall through */
+#endif /* #if defined(J9VM_OPT_VALHALLA_VALUE_TYPES) */
+		case 'L': /* fall through */
 		case '[':
 			sigArgs = jniCheckObjectArg(function, env, va_arg(args, jobject), sigArgs, argNum, trace);
 			break;
@@ -525,7 +528,10 @@ jniCheckCallA(const char* function, JNIEnv* env, jobject receiver, UDATA methodT
 			if (argNum !=3) j9tty_printf(PORTLIB, ", ");
 		}
 		switch (*sigArgs) {
-		case 'L':
+#if defined(J9VM_OPT_VALHALLA_VALUE_TYPES)
+		case 'Q': /* fall through */
+#endif /* #if defined(J9VM_OPT_VALHALLA_VALUE_TYPES) */
+		case 'L': /* fall through */
 		case '[':
 			sigArgs = jniCheckObjectArg(function, env, args++->l, sigArgs, argNum, trace);
 			break;
@@ -1864,7 +1870,7 @@ methodExitHook(J9HookInterface** hook, UDATA eventNum, void* eventData, void* us
 
 			returnValue[0] = returnValues[0];
 #ifdef J9VM_ENV_DATA64
-			if (sigChar != 'L' && sigChar != 'D' && sigChar != 'J') {
+			if (sigChar != 'L' && sigChar != 'D' && sigChar != 'J' && !IS_QTYPE(sigChar)) {
 				*((U_32 *)returnValue) = (U_32) returnValues[0];
 			}
 #else
@@ -1922,6 +1928,9 @@ jniDecodeValue(J9VMThread * vmThread, UDATA sigChar, void * valuePtr, char ** ou
 		case 'Z':
 			written = j9str_printf(PORTLIB, *outputBuffer, *outputBufferLength, "(jboolean)%s", *((I_32 *) valuePtr) ? "true" : "false");
 			break;
+#if defined(J9VM_OPT_VALHALLA_VALUE_TYPES)
+		case 'Q': /* fall through */
+#endif /* #if defined(J9VM_OPT_VALHALLA_VALUE_TYPES) */
 		case 'L':
 			written = j9str_printf(PORTLIB, *outputBuffer, *outputBufferLength, "(jobject)0x%p", *((UDATA *) valuePtr));
 			break;
@@ -1960,6 +1969,9 @@ static UDATA jniNextSigChar(U_8 ** utfData)
 			}
 			/* Fall through to consume type name, utfChar == 'L' for return value */
 
+#if defined(J9VM_OPT_VALHALLA_VALUE_TYPES)
+		case 'Q': /* fall through */
+#endif /* #if defined(J9VM_OPT_VALHALLA_VALUE_TYPES) */
 		case 'L':
 			while (*data++ != ';') ;
 	}
@@ -2361,7 +2373,7 @@ jniCheckCall(const char* function, JNIEnv* env, jobject receiver, UDATA methodTy
 	}
 
 	returnSig = strchr((const char*)J9UTF8_DATA(sig), ')') + 1;
-	if ( (UDATA)*returnSig != returnType && ((UDATA)*returnSig != '[' || returnType != 'L') ) {
+	if ( (UDATA)*returnSig != returnType && ((UDATA)*returnSig != '[' || returnType != 'L' || !IS_QTYPE(returnType)) ) {
 		jniCheckFatalErrorNLS(env, J9NLS_JNICHK_METHOD_HAS_WRONG_RETURN_TYPE, function, *returnSig);
 	}
 
@@ -2452,6 +2464,9 @@ jniCheckObjectArg(const char* function, JNIEnv* env, jobject aJobject, char* sig
 	PORT_ACCESS_FROM_JAVAVM(vm);
 
 	switch (*sigArgs) {
+#if defined(J9VM_OPT_VALHALLA_VALUE_TYPES)
+	case 'Q': /* fall through */
+#endif /* #if defined(J9VM_OPT_VALHALLA_VALUE_TYPES) */
 	case 'L':
 		while (*sigArgs != ';') {
 			sigArgs++;
@@ -2461,7 +2476,7 @@ jniCheckObjectArg(const char* function, JNIEnv* env, jobject aJobject, char* sig
 		while (*sigArgs == '[') {
 			sigArgs++;
 		}
-		if (*sigArgs == 'L') {
+		if ((*sigArgs == 'L') || IS_QTYPE(*sigArgs)) {
 			while (*sigArgs != ';') {
 				sigArgs++;
 			}

@@ -1005,7 +1005,7 @@ Java_java_lang_invoke_MethodHandleNatives_resolve(
 							while ('[' == J9UTF8_DATA(signature)[sigOffset]) {
 								sigOffset += 1;
 							}
-							if ('L' == J9UTF8_DATA(signature)[sigOffset]) {
+							if (('L' == J9UTF8_DATA(signature)[sigOffset]) || IS_QTYPE(J9UTF8_DATA(signature)[sigOffset])) {
 								sigOffset += 1;
 								omrthread_monitor_enter(vm->classTableMutex);
 								UDATA clConstraintResult = verifyData->checkClassLoadingConstraintForNameFunction(

@@ -897,7 +897,7 @@ GC_CheckEngine::checkClassStatics(J9JavaVM* vm, J9Class* clazz)
 						U_8* toSearchString = J9UTF8_DATA(sigUTF);
 						UDATA toSearchLength = J9UTF8_LENGTH(sigUTF);
 
-						if ('L' == J9UTF8_DATA(sigUTF)[0]) {
+						if (('L' == J9UTF8_DATA(sigUTF)[0]) || IS_QTYPE(J9UTF8_DATA(sigUTF)[0])) {
 							/*  Convert signature to class name:
 							 *  Entering 'L' as well as closing ';' must be removed to get a proper class name
 							 */

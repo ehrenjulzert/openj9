@@ -1154,6 +1154,9 @@ printMethod (J9BytecodeVerificationData * verifyData)
 			printf( "long");
 			break;
 
+#if defined(J9VM_OPT_VALHALLA_VALUE_TYPES)
+		case 'Q': /* fall through */
+#endif /* #if defined(J9VM_OPT_VALHALLA_VALUE_TYPES) */
 		case 'L':
 			i++;
 			while(string[i] != ';')
@@ -1209,7 +1212,10 @@ printMethod (J9BytecodeVerificationData * verifyData)
 			case 'J':
 				printf( "long");
 				break;
-		
+
+#if defined(J9VM_OPT_VALHALLA_VALUE_TYPES)
+			case 'Q': /* fall through */
+#endif /* #if defined(J9VM_OPT_VALHALLA_VALUE_TYPES) */
 			case 'L':
 				i++;
 				while(string[i] != ';')

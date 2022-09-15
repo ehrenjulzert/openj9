@@ -107,6 +107,9 @@ computeArgsCRC(const jvalue *args, jmethodID methodID)
 		case '[':
 			/* ignore square brackets and just count the leaf type as one argument */
 			break;
+#if defined(J9VM_OPT_VALHALLA_VALUE_TYPES)
+		case 'Q': /* fall through */
+#endif /* #if defined(J9VM_OPT_VALHALLA_VALUE_TYPES) */
 		case 'L':
 			while (*++sigArgs != ';') {
 				/* skip up to the semi-colon */

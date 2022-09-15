@@ -49,7 +49,11 @@ public class ArgBits
 		/* Parse the signature inside the ()'s */
 		char thisChar;
 		while ((thisChar = signature.charAt(++stringPtr)) != ')') {
-			if ((thisChar == '[') || (thisChar == 'L')) {
+			if ((thisChar == '[') || (thisChar == 'L')
+			/*[IF INLINE-TYPES]*/
+			|| (thisChar == 'Q')
+			/*[ENDIF] INLINE-TYPES*/
+			) {
 				/* Mark a bit for objects or arrays */
 				resultArray[writePtr] |= argBit;
 				
@@ -58,7 +62,11 @@ public class ArgBits
 					stringPtr++;
 				}
 
-				if (thisChar == 'L' ) {
+				if ((thisChar == 'L')
+				/*[IF INLINE-TYPES]*/
+				|| (thisChar == 'Q')
+				/*[ENDIF] INLINE-TYPES*/
+				) {
 					/* Walk past the name of the object class */
 					while ((thisChar = signature.charAt(stringPtr)) != ';') {
 						stringPtr++;

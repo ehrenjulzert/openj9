@@ -86,7 +86,7 @@ j9bcv_checkClassLoadingConstraintsForSignature (J9VMThread* vmThread, J9ClassLoa
 	omrthread_monitor_enter(javaVM->classTableMutex);
 	for (;;) {
 		/* find a 'L', indicating the beginning of a class name */
-		while (index  < length && J9UTF8_DATA(sig1)[index] != 'L') {
+		while (index  < length && J9UTF8_DATA(sig1)[index] != 'L' && !IS_QTYPE(J9UTF8_DATA(sig1)[index])) {
 			index++;
 		}
 		if (index >= length) {

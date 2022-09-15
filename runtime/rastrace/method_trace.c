@@ -486,13 +486,16 @@ traceMethodArguments(J9VMThread* thr, J9UTF8* signature, UDATA* arg0EA, char* bu
 
 	while (*(++sigChar) != ')') {
 		switch (*sigChar) {
-		case '[':
+		case '[': /* fall through */
+#if defined(J9VM_OPT_VALHALLA_VALUE_TYPES)
+		case 'Q': /* fall through */
+#endif /* #if defined(J9VM_OPT_VALHALLA_VALUE_TYPES) */
 		case 'L':
 			traceMethodArgObject(thr, arg0EA--, cursor, endOfBuf - cursor);
 			while (*sigChar == '[') {
 				sigChar++;
 			}
-			if (*sigChar == 'L' ) {
+			if (*sigChar == 'L' || *sigChar == 'Q') {
 				while (*sigChar != ';') {
 					sigChar++;
 				}
@@ -565,7 +568,10 @@ traceMethodReturnVal(J9VMThread* thr, J9UTF8* signature, void* returnValuePtr, c
 		continue;
 	}
 	switch (*(++sigChar)) {
-	case '[':
+	case '[': /* fall through */
+#if defined(J9VM_OPT_VALHALLA_VALUE_TYPES)
+		case 'Q': /* fall through */
+#endif /* #if defined(J9VM_OPT_VALHALLA_VALUE_TYPES) */
 	case 'L':
 		traceMethodArgObject(thr, returnValuePtr, cursor, endOfBuf - cursor);
 		break;

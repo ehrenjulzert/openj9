@@ -2146,7 +2146,7 @@ ROMClassWriter::writeNativeSignature(Cursor *cursor, U_8 *methodDescriptor, U_8 
 		} else {
 			cursor->writeU8(nativeArgCharConversion[methodDescriptor[index] - 'A'], Cursor::GENERIC);
 		}
-		if ('L' == methodDescriptor[index]) {
+		if (('L' == methodDescriptor[index]) || IS_QTYPE(methodDescriptor[index])) {
 			while (';' != methodDescriptor[index]) {
 				++index;
 			}

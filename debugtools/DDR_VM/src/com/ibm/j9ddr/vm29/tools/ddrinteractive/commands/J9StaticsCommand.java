@@ -83,7 +83,10 @@ public class J9StaticsCommand extends Command {
 				UDATAPointer fieldAddress = ramClass.ramStatics().addOffset(fieldOffset.getOffsetOrAddress());
 
 				switch (sig.charAt(0)) {
-				case 'L':
+				/*[IF INLINE-TYPES]*/
+				case 'Q': /* fall through */
+				/*[ENDIF] INLINE-TYPES*/
+				case 'L': /* fall through */
 				case '[':
 					CommandUtils.dbgPrint(out, "\t%s %s %s (!j9romstaticfieldshape %s) = !j9object %s\n",
 							fieldAddress.getHexAddress(), name, sig, field.getHexAddress(), fieldAddress.at(0).getHexValue());

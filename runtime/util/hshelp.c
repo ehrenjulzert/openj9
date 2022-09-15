@@ -518,7 +518,7 @@ iterateToNextArgument(U_32 sigIndex, U_32 sigLength, U_8* sigData)
 	if (sigIndex >= sigLength) return sigIndex;
 
 	/* check for object */
-	if ('L' == sigData[sigIndex]) {
+	if (('L' == sigData[sigIndex]) || IS_QTYPE(sigData[sigIndex])) {
 		while ((sigIndex < sigLength) && (';' != sigData[sigIndex])) {
 			sigIndex += 1;
 		}

@@ -220,7 +220,10 @@ public class J9ObjectStructureFormatter extends BaseStructureFormatter
 					out.format("[%d] = %2d, 0x%016x, %8.8fF%n", index, I64Pointer.cast(slot).at(0).longValue(), I64Pointer.cast(slot).at(0).longValue(), DoublePointer.cast(slot).doubleAt(0));
 				}
 				break;
-			case 'L':
+			/*[IF INLINE-TYPES]*/
+			case 'Q': /* fall through */
+			/*[ENDIF] INLINE-TYPES*/
+			case 'L': /* fall through */
 			case '[':
 				if (ValueTypeHelper.getValueTypeHelper().isJ9ClassIsFlattened(localClazz)) {
 					formatFlattenedObjectArray(out, tabLevel, begin, finish, array);

@@ -46,12 +46,20 @@ public class SendSlot
 			case '[':
 				/* skip all '['s */
 				for (i++; J9UTF8Helper.stringValue(signature).charAt(i) == '['; i++);
-				if (J9UTF8Helper.stringValue(signature).charAt(i) == 'L') {
+				char charAti = J9UTF8Helper.stringValue(signature).charAt(i);
+				if ((charAti == 'L')
+				/*[IF INLINE-TYPES]*/
+				|| (charAti == 'Q')
+				/*[ENDIF] INLINE-TYPES*/
+				) {
 					/* FALL THRU */
 				} else {
 					sendArgs = sendArgs.add(1);
 					break;
 				}
+			/*[IF INLINE-TYPES]*/
+			case 'Q': /* fall through */
+			/*[ENDIF] INLINE-TYPES*/
 			case 'L':
 				for (i++; J9UTF8Helper.stringValue(signature).charAt(i) != ';'; i++);
 				sendArgs = sendArgs.add(1);

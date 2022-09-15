@@ -213,6 +213,9 @@ convertMethodSignature(J9VMThread *vmThread, J9UTF8 *methodSig)
 			/* int */
 			bufferSize += 3;
 			break;
+#if defined(J9VM_OPT_VALHALLA_VALUE_TYPES)
+		case 'Q': /* fall through */
+#endif /* #if defined(J9VM_OPT_VALHALLA_VALUE_TYPES) */
 		case 'L': {
 			i += 1;
 			UDATA objSize = 0;
@@ -257,7 +260,7 @@ convertMethodSignature(J9VMThread *vmThread, J9UTF8 *methodSig)
 				i += 1;
 			}
 			const char *elementType = NULL;
-			if ('L' == string[i]) {
+			if (('L' == string[i]) || IS_QTYPE(string[i])) {
 				i += 1;
 
 				UDATA objSize = 0;
@@ -2014,7 +2017,7 @@ initStackFromMethodSignature(J9VMThread *vmThread, J9ROMMethod *romMethod, UDATA
 			i++;
 		}
 		PUSH(argCount); /* push the argCount as the argument */
-		if ('L' == args[i]) {
+		if (('L' == args[i]) || IS_QTYPE(args[i])) {
 			i++;
 			while (';' != args[i]) {
 				i++;

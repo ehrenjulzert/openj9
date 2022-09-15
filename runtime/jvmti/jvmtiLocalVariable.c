@@ -364,6 +364,9 @@ jvmtiGetOrSetLocal(jvmtiEnv* env,
 									case 'J':
 										memcpy(slotAddress - 1, value_ptr, sizeof(U_64));
 										break;
+#if defined(J9VM_OPT_VALHALLA_VALUE_TYPES)
+									case 'Q': /* fall through */
+#endif /* #if defined(J9VM_OPT_VALHALLA_VALUE_TYPES) */
 									case 'L':
 										/* Perform type check? */
 										*((j9object_t*) slotAddress) = (value_ptr == NULL ? NULL : *((j9object_t*) value_ptr));
@@ -388,6 +391,9 @@ jvmtiGetOrSetLocal(jvmtiEnv* env,
 										memset(value_ptr, 0, sizeof(U_64));
 									}
 									break;
+#if defined(J9VM_OPT_VALHALLA_VALUE_TYPES)
+								case 'Q': /* fall through */
+#endif /* #if defined(J9VM_OPT_VALHALLA_VALUE_TYPES) */
 								case 'L':
 									/* CMVC 109592 - Must not modify the stack while a thread is halted for inspection - this includes creation of JNI local refs */
 									objectFetched = TRUE;

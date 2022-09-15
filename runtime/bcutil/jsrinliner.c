@@ -1159,11 +1159,11 @@ _nextBranch:
 					stackError |= popStack (jsrData);
 					if (args[step] == '[') {
 						while (args[++step] == '[');
-						if (args[step] != 'L') {
+						if ((args[step] != 'L') && !IS_QTYPE(args[step])) {
 							continue;
 						}
 					}
-					if (args[step] == 'L') {
+					if ((args[step] == 'L') || IS_QTYPE(args[step])) {
 						while (args[++step] != ';');
 						continue;
 					}
