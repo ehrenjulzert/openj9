@@ -82,6 +82,8 @@ static inlMapping mappings[] = {
 	{ "Java_java_lang_Thread_setCurrentThread__Ljava_lang_Thread_2", J9_BCLOOP_SEND_TARGET_INL_THREAD_SET_CURRENT_THREAD },
 #endif /* JAVA_SPEC_VERSION >= 19 */
 	{ "Java_java_lang_Object_getClass__", J9_BCLOOP_SEND_TARGET_INL_OBJECT_GET_CLASS },
+	{ "Java_java_lang_Object_getExactAddress__", J9_BCLOOP_SEND_TARGET_INL_OBJECT_GET_EXACT_ADDRESS },
+	{ "Java_java_lang_Object_dumpCore__", J9_BCLOOP_SEND_TARGET_INL_OBJECT_DUMP_CORE },
 	{ "Java_java_lang_Class_isAssignableFrom__Ljava_lang_Class_2", J9_BCLOOP_SEND_TARGET_INL_CLASS_IS_ASSIGNABLE_FROM },
 	{ "Java_java_lang_Class_isArray__", J9_BCLOOP_SEND_TARGET_INL_CLASS_IS_ARRAY },
 	{ "Java_java_lang_Class_isPrimitive__", J9_BCLOOP_SEND_TARGET_INL_CLASS_IS_PRIMITIVE },
