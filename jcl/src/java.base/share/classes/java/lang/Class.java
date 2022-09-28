@@ -2576,7 +2576,12 @@ public native boolean isAssignableFrom(Class<?> cls);
  * @param		object Object
  *					the object to test
  */
-public native boolean isInstance(Object object);
+public native boolean isInstanceHelper(Object object);
+
+public boolean isInstance(Object object) {
+	new Exception().printStackTrace();
+	return isInstanceHelper(object);
+}
 
 /**
  * Answers true if the receiver represents an interface.
