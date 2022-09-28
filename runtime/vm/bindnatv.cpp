@@ -82,6 +82,8 @@ static inlMapping mappings[] = {
 	{ "Java_java_lang_Thread_setCurrentThread__Ljava_lang_Thread_2", J9_BCLOOP_SEND_TARGET_INL_THREAD_SET_CURRENT_THREAD },
 #endif /* JAVA_SPEC_VERSION >= 19 */
 	{ "Java_java_lang_Object_getClass__", J9_BCLOOP_SEND_TARGET_INL_OBJECT_GET_CLASS },
+	{ "Java_java_lang_Object_getExactAddress__", J9_BCLOOP_SEND_TARGET_INL_OBJECT_GET_EXACT_ADDRESS },
+	{ "Java_java_lang_Object_dumpCore__", J9_BCLOOP_SEND_TARGET_INL_OBJECT_DUMP_CORE },
 	{ "Java_java_lang_Class_isAssignableFrom__Ljava_lang_Class_2", J9_BCLOOP_SEND_TARGET_INL_CLASS_IS_ASSIGNABLE_FROM },
 	{ "Java_java_lang_Class_isArray__", J9_BCLOOP_SEND_TARGET_INL_CLASS_IS_ARRAY },
 	{ "Java_java_lang_Class_isPrimitive__", J9_BCLOOP_SEND_TARGET_INL_CLASS_IS_PRIMITIVE },
@@ -184,7 +186,7 @@ static inlMapping mappings[] = {
 	{ "Java_org_apache_harmony_kernel_vm_VM_getStackClassLoader__I", J9_BCLOOP_SEND_TARGET_INL_VM_GET_STACK_CLASS_LOADER },
 	{ "Java_java_lang_Object_notifyAll__", J9_BCLOOP_SEND_TARGET_INL_OBJECT_NOTIFY_ALL },
 	{ "Java_java_lang_Object_notify__", J9_BCLOOP_SEND_TARGET_INL_OBJECT_NOTIFY },
-	{ "Java_java_lang_Class_isInstance__Ljava_lang_Object_2", J9_BCLOOP_SEND_TARGET_INL_CLASS_IS_INSTANCE },
+	{ "Java_java_lang_Class_isInstanceHelper__Ljava_lang_Object_2", J9_BCLOOP_SEND_TARGET_INL_CLASS_IS_INSTANCE },
 	{ "Java_java_lang_Class_getSimpleNameImpl__", J9_BCLOOP_SEND_TARGET_INL_CLASS_GET_SIMPLE_NAME_IMPL },
 	{ "Java_com_ibm_oti_vm_VM_initializeClassLoader__Ljava_lang_ClassLoader_2IZ", J9_BCLOOP_SEND_TARGET_INL_VM_INITIALIZE_CLASS_LOADER },
 	{ "Java_com_ibm_oti_vm_VM_getClassPathEntryType__Ljava_lang_Object_2I", J9_BCLOOP_SEND_TARGET_INL_VM_GET_CLASS_PATH_ENTRY_TYPE },

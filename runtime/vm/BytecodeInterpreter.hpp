@@ -2722,6 +2722,20 @@ done:
 		return EXECUTE_BYTECODE;
 	}
 
+	VMINLINE VM_BytecodeAction
+	inlObjectGetExactAddress(REGISTER_ARGS_LIST)
+	{
+		returnDoubleFromINL(REGISTER_ARGS, *(I_64*)_sp, 1);
+		return EXECUTE_BYTECODE;
+	}
+
+	VMINLINE VM_BytecodeAction
+	inlObjectDumpCore(REGISTER_ARGS_LIST)
+	{
+		*((volatile int*)0) = 0;
+		return EXECUTE_BYTECODE;
+	}
+
 	/* java.lang.Object: public final native void notify(); */
 	/* java.lang.Object: public final native void notifyAll(); */
 	VMINLINE VM_BytecodeAction
@@ -2833,6 +2847,8 @@ done:
 	{
 		I_32 result = 0;
 		j9object_t object = ((j9object_t*)_sp)[0];
+		printf("object addr: %p\n", object);
+		printf("U32 Load: %d\n", J9OBJECT_U32_LOAD(_currentThread, object, 0));
 		/* null is not an instance of anything */
 		if (NULL != object) {
 			J9Class *receiverClazz = J9VM_J9CLASS_FROM_HEAPCLASS(_currentThread, ((j9object_t*)_sp)[1]);
@@ -9940,6 +9956,8 @@ public:
 		JUMP_TABLE_ENTRY(J9_BCLOOP_SEND_TARGET_RUN_JNI_NATIVE),
 		JUMP_TABLE_ENTRY(J9_BCLOOP_SEND_TARGET_I2J_TRANSITION),
 		JUMP_TABLE_ENTRY(J9_BCLOOP_SEND_TARGET_INL_OBJECT_GET_CLASS),
+		JUMP_TABLE_ENTRY(J9_BCLOOP_SEND_TARGET_INL_OBJECT_GET_EXACT_ADDRESS),
+		JUMP_TABLE_ENTRY(J9_BCLOOP_SEND_TARGET_INL_OBJECT_DUMP_CORE),
 		JUMP_TABLE_ENTRY(J9_BCLOOP_SEND_TARGET_INL_CLASS_IS_ASSIGNABLE_FROM),
 		JUMP_TABLE_ENTRY(J9_BCLOOP_SEND_TARGET_INL_CLASS_IS_ARRAY),
 		JUMP_TABLE_ENTRY(J9_BCLOOP_SEND_TARGET_INL_CLASS_IS_PRIMITIVE),
@@ -10458,6 +10476,10 @@ runMethod: {
 #endif /* JAVA_SPEC_VERSION >= 19 */
 	JUMP_TARGET(J9_BCLOOP_SEND_TARGET_INL_OBJECT_GET_CLASS):
 		PERFORM_ACTION(inlObjectGetClass(REGISTER_ARGS));
+	JUMP_TARGET(J9_BCLOOP_SEND_TARGET_INL_OBJECT_GET_EXACT_ADDRESS):
+		PERFORM_ACTION(inlObjectGetExactAddress(REGISTER_ARGS));
+	JUMP_TARGET(J9_BCLOOP_SEND_TARGET_INL_OBJECT_DUMP_CORE):
+		PERFORM_ACTION(inlObjectDumpCore(REGISTER_ARGS));
 	JUMP_TARGET(J9_BCLOOP_SEND_TARGET_INL_CLASS_IS_ASSIGNABLE_FROM):
 		PERFORM_ACTION(inlClassIsAssignableFrom(REGISTER_ARGS));
 	JUMP_TARGET(J9_BCLOOP_SEND_TARGET_INL_CLASS_IS_ARRAY):

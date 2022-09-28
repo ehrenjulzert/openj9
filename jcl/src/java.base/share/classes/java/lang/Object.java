@@ -119,6 +119,9 @@ protected void finalize () throws Throwable {
  */
 public final native Class<? extends Object> getClass();
 
+public final native long getExactAddress();
+public final native void dumpCore();
+
 /**
  * Answers an integer hash code for the receiver. Any two
  * objects which answer <code>true</code> when passed to
