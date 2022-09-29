@@ -2579,7 +2579,7 @@ public native boolean isAssignableFrom(Class<?> cls);
 public native boolean isInstanceHelper(Object object);
 
 public boolean isInstance(Object object) {
-	new Exception().printStackTrace();
+	//new Exception().printStackTrace();
 	return isInstanceHelper(object);
 }
 
