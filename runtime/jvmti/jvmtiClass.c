@@ -366,13 +366,24 @@ jvmtiGetClassSignature(jvmtiEnv* env,
 					signature[arity] = 'L';
 					memcpy(signature + arity + 1, J9UTF8_DATA(utf), utfLength);
 					signature[allocSize - 1] = ';';
+
+					if (J9ROMCLASS_IS_ANON_OR_HIDDEN(leafType->romClass)) {
+						int i = allocSize - 3;
+						for (; i >= 0; i--) {
+							if ((signature[i] == ANON_CLASSNAME_CHARACTER_SEPARATOR) && (signature[i+1] == '0') && (signature[i+2] == 'x')) {
+								signature[i] = '.';
+								break;
+							}
+						}
+					}
 				}
 				signature[allocSize] = '\0';
 			} else {
 				J9UTF8 * utf = J9ROMCLASS_CLASSNAME(clazz->romClass);
 				UDATA utfLength = J9UTF8_LENGTH(utf);
+				UDATA signatureLength = utfLength + 3;
 
-				signature = j9mem_allocate_memory(utfLength + 3, J9MEM_CATEGORY_JVMTI_ALLOCATE);
+				signature = j9mem_allocate_memory(signatureLength, J9MEM_CATEGORY_JVMTI_ALLOCATE);
 				if (signature == NULL) {
 					rc = JVMTI_ERROR_OUT_OF_MEMORY;
 					goto done;
@@ -381,6 +392,16 @@ jvmtiGetClassSignature(jvmtiEnv* env,
 				memcpy(signature + 1, J9UTF8_DATA(utf), utfLength);
 				signature[utfLength + 1] = ';';
 				signature[utfLength + 2] = '\0';
+
+				if (J9ROMCLASS_IS_ANON_OR_HIDDEN(clazz->romClass)) {
+					int i = signatureLength - 3;
+					for (; i >= 0; i--) {
+						if ((signature[i] == ANON_CLASSNAME_CHARACTER_SEPARATOR) && (signature[i+1] == '0') && (signature[i+2] == 'x')) {
+							signature[i] = '.';
+							break;
+						}
+					}
+				}
 			}
 		}
 
