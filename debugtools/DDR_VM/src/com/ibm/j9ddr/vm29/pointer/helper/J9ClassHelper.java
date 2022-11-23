@@ -168,6 +168,9 @@ public class J9ClassHelper
 		case 'V': return "void" + aritySuffix;
 		case 'Z': return "boolean" + aritySuffix;
 		
+		/*[IF INLINE-TYPES]*/
+		case 'Q': /* fall through */
+		/*[ENDIF] INLINE-TYPES*/
 		case 'L': 
 			return getName(arrayClass.leafComponentType()) + aritySuffix;
 		}
