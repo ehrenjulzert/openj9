@@ -1106,6 +1106,9 @@ static void printMethod(J9CfrClassFile* classfile, J9CfrMethod* method)
 			j9tty_printf( PORTLIB, "long");
 			break;
 
+#if defined(J9VM_OPT_VALHALLA_VALUE_TYPES)
+		case 'Q': /* fall through */
+#endif /* #if defined(J9VM_OPT_VALHALLA_VALUE_TYPES) */
 		case 'L':
 			i++;
 			while(string[i] != ';')
@@ -1162,6 +1165,9 @@ static void printMethod(J9CfrClassFile* classfile, J9CfrMethod* method)
 				j9tty_printf( PORTLIB, "long");
 				break;
 
+#if defined(J9VM_OPT_VALHALLA_VALUE_TYPES)
+			case 'Q': /* fall through */
+#endif /* #if defined(J9VM_OPT_VALHALLA_VALUE_TYPES) */
 			case 'L':
 				i++;
 				while(string[i] != ';')
@@ -1277,7 +1283,9 @@ static void printField(J9CfrClassFile* classfile, J9CfrField* field)
 		case 'J':
 			j9tty_printf( PORTLIB, "long");
 			break;
-
+#if defined(J9VM_OPT_VALHALLA_VALUE_TYPES)
+		case 'Q': /* fall through */
+#endif /* #if defined(J9VM_OPT_VALHALLA_VALUE_TYPES) */
 		case 'L':
 			i++;
 			while(string[i] != ';')
@@ -1372,6 +1380,9 @@ static void printDisassembledMethod(J9CfrClassFile* classfile, J9CfrMethod* meth
 			j9tty_printf( PORTLIB, "long");
 			break;
 
+#if defined(J9VM_OPT_VALHALLA_VALUE_TYPES)
+		case 'Q': /* fall through */
+#endif /* #if defined(J9VM_OPT_VALHALLA_VALUE_TYPES) */
 		case 'L':
 			i++;
 			while(string[i] != ';')
@@ -1428,6 +1439,9 @@ static void printDisassembledMethod(J9CfrClassFile* classfile, J9CfrMethod* meth
 				j9tty_printf( PORTLIB, "long");
 				break;
 
+#if defined(J9VM_OPT_VALHALLA_VALUE_TYPES)
+			case 'Q': /* fall through */
+#endif /* #if defined(J9VM_OPT_VALHALLA_VALUE_TYPES) */
 			case 'L':
 				i++;
 				while(string[i] != ';')
@@ -4427,6 +4441,9 @@ static void sun_formatField(J9CfrClassFile* classfile, J9CfrField* field, char *
 						}
 						switch(string[j++])
 						{
+#if defined(J9VM_OPT_VALHALLA_VALUE_TYPES)
+							case 'Q': /* fall through */
+#endif /* #if defined(J9VM_OPT_VALHALLA_VALUE_TYPES) */
 							case 'L':
 								while((ch2 = string[j++]) != ';')
 								{
@@ -4674,6 +4691,9 @@ static void sun_formatMethod(J9CfrClassFile* classfile, J9CfrMethod* method, cha
 						}
 						switch(string[j++])
 						{
+#if defined(J9VM_OPT_VALHALLA_VALUE_TYPES)
+							case 'Q': /* fall through */
+#endif /* #if defined(J9VM_OPT_VALHALLA_VALUE_TYPES) */
 							case 'L':
 								while((ch2 = string[j++]) != ';')
 								{
@@ -4739,6 +4759,9 @@ static void sun_formatMethod(J9CfrClassFile* classfile, J9CfrMethod* method, cha
 							}
 							switch(string[j++])
 							{
+#if defined(J9VM_OPT_VALHALLA_VALUE_TYPES)
+								case 'Q': /* fall through */
+#endif /* #if defined(J9VM_OPT_VALHALLA_VALUE_TYPES) */
 								case 'L':
 									while((ch2 = string[j++]) != ';')
 									{
@@ -5192,6 +5215,9 @@ static void j9_formatField(J9ROMClass* romClass, J9ROMFieldShape* field, char *f
 						}
 						switch(string[j++])
 						{
+#if defined(J9VM_OPT_VALHALLA_VALUE_TYPES)
+							case 'Q': /* fall through */
+#endif /* #if defined(J9VM_OPT_VALHALLA_VALUE_TYPES) */
 							case 'L':
 								while((ch2 = string[j++]) != ';')
 								{
@@ -5464,6 +5490,9 @@ static void j9_formatMethod(J9ROMClass* romClass, J9ROMMethod* method, char *for
 						}
 						switch(string[j++])
 						{
+#if defined(J9VM_OPT_VALHALLA_VALUE_TYPES)
+							case 'Q': /* fall through */
+#endif /* #if defined(J9VM_OPT_VALHALLA_VALUE_TYPES) */
 							case 'L':
 								while((ch2 = string[j++]) != ';')
 								{
@@ -5530,6 +5559,9 @@ static void j9_formatMethod(J9ROMClass* romClass, J9ROMMethod* method, char *for
 							}
 							switch(string[j++])
 							{
+#if defined(J9VM_OPT_VALHALLA_VALUE_TYPES)
+								case 'Q': /* fall through */
+#endif /* #if defined(J9VM_OPT_VALHALLA_VALUE_TYPES) */
 								case 'L':
 									while((ch2 = string[j++]) != ';')
 									{

@@ -291,8 +291,11 @@ public class J9IndexableObjectHelper extends J9ObjectHelper
 			getBooleanData(objPointer, (boolean[])dst, start, length, destStart);
 			break;
 		}
-			
-		case 'L':
+
+		/*[IF INLINE-TYPES]*/
+		case 'Q': /* fall through */
+		/*[ENDIF] INLINE-TYPES*/
+		case 'L': /* fall through */
 		case '[':
 		{
 			if (! (dst instanceof J9ObjectPointer[])) {
@@ -462,8 +465,11 @@ public class J9IndexableObjectHelper extends J9ObjectHelper
 			getBooleanData(objPointer, data, 0, arraySize, 0);
 			return data;			
 		}
-			
-		case 'L':
+
+		/*[IF INLINE-TYPES]*/
+		case 'Q': /* fall through */
+		/*[ENDIF] INLINE-TYPES*/
+		case 'L': /* fall through */
 		case '[':
 		{
 			J9ObjectPointer[] data = new J9ObjectPointer[arraySize];			
@@ -539,7 +545,10 @@ public class J9IndexableObjectHelper extends J9ObjectHelper
 				buf.write(((boolean[])data)[i] ? "true" : "false");
 				break;								
 
-			case 'L':
+			/*[IF INLINE-TYPES]*/
+			case 'Q': /* fall through */
+			/*[ENDIF] INLINE-TYPES*/
+			case 'L': /* fall through */
 			case '[':
 			{
 				J9ObjectPointer item = ((J9ObjectPointer[])data)[i];

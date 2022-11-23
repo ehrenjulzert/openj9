@@ -213,6 +213,9 @@ convertMethodSignature(J9VMThread *vmThread, J9UTF8 *methodSig)
 			/* int */
 			bufferSize += 3;
 			break;
+#if defined(J9VM_OPT_VALHALLA_VALUE_TYPES)
+		case 'Q': /* fall through */
+#endif /* #if defined(J9VM_OPT_VALHALLA_VALUE_TYPES) */
 		case 'L': {
 			i += 1;
 			UDATA objSize = 0;

@@ -649,6 +649,12 @@ nativeSignature(J9Method* nativeMethod, char *resultBuffer)
 			case ')':										/* End of signature -- done args, find return type */
 				parsingReturnType = TRUE;
 				continue;
+#if defined(J9VM_OPT_VALHALLA_VALUE_TYPES)
+			case 'Q':
+				nextType = 'Q';
+				while(J9UTF8_DATA(methodSig)[i++] != ';') {}		/* a type string - loop scanning for ';' to end it - i points past ';' when done loop */
+				break;
+#endif /* #if defined(J9VM_OPT_VALHALLA_VALUE_TYPES) */
 			case 'L':
 				nextType = 'L';
 				while(J9UTF8_DATA(methodSig)[i++] != ';') {}		/* a type string - loop scanning for ';' to end it - i points past ';' when done loop */

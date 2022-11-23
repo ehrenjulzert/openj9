@@ -69,7 +69,11 @@ public class J9ClassLoaderHelper
 		
 		int arity = calculateClassArity(signature);
 		
-		if (arity > 0 && signature.charAt(arity) != 'L') {
+		if ((arity > 0) && (signature.charAt(arity) != 'L')
+		/*[IF INLINE-TYPES]*/
+		&& (signature.charAt(arity) != 'Q')
+		/*[ENDIF] INLINE-TYPES*/
+		) {
 			return PRIMITIVE_TO_CLASS.get(signature.charAt(arity));			
 		} else {		
 			while (classIterator.hasNext()) {
