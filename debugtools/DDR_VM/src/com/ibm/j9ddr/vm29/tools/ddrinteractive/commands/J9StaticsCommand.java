@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2019 IBM Corp. and others
+ * Copyright (c) 2001, 2022 IBM Corp. and others
  *
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which accompanies this
@@ -83,7 +83,10 @@ public class J9StaticsCommand extends Command {
 				UDATAPointer fieldAddress = ramClass.ramStatics().addOffset(fieldOffset.getOffsetOrAddress());
 
 				switch (sig.charAt(0)) {
-				case 'L':
+				/*[IF INLINE-TYPES]*/
+				case 'Q': /* fall through */
+				/*[ENDIF] INLINE-TYPES*/
+				case 'L': /* fall through */
 				case '[':
 					CommandUtils.dbgPrint(out, "\t%s %s %s (!j9romstaticfieldshape %s) = !j9object %s\n",
 							fieldAddress.getHexAddress(), name, sig, field.getHexAddress(), fieldAddress.at(0).getHexValue());

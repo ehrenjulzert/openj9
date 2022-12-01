@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2021 IBM Corp. and others
+ * Copyright (c) 2004, 2022 IBM Corp. and others
  *
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which accompanies this
@@ -122,7 +122,10 @@ public class FieldRef extends PrimaryItem implements Constants {
 
 		// Arrays and objects take precedence over cast to support pointer compression
 		switch (((Alias) primary).nas.signature.data.charAt(0)) {
-		case '[':
+		case '[': /* fall through */
+		/*[IF INLINE-TYPES]*/
+		case 'Q': /* fall through */
+		/*[ENDIF] INLINE-TYPES*/
 		case 'L':
 			return "OBJECT";
 		default:
@@ -151,7 +154,10 @@ public class FieldRef extends PrimaryItem implements Constants {
 
 		// Otherwise just determine it from the signature
 		switch (((Alias) primary).nas.signature.data.charAt(0)) {
-		case '[':
+		case '[': /* fall through */
+		/*[IF INLINE-TYPES]*/
+		case 'Q': /* fall through */
+		/*[ENDIF] INLINE-TYPES*/
 		case 'L':
 			return "OBJECT";
 		case 'J':

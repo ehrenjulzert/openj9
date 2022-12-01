@@ -200,7 +200,11 @@ final class MethodTypeHelper {
 	private static final Class<?> nonPrimitiveClassFromString(String name, ClassLoader classLoader) {
 		try {
 			name = name.replace('/', '.');
-			if (name.indexOf('L') == 0) {
+			if ((name.indexOf('L') == 0)
+				/*[IF INLINE-TYPES]*/
+				|| (name.indexOf('Q') == 0)
+				/*[ENDIF] INLINE-TYPES*/
+			) {
 				// Remove the 'L' and ';'
 				name = name.substring(1, name.length() - 1);
 			}
@@ -218,13 +222,21 @@ final class MethodTypeHelper {
 		char current = signature[index];
 		Class<?> c;
 
-		if ((current == 'L') || (current == '[')) {
+		if ((current == 'L') || (current == '[')
+			/*[IF INLINE-TYPES]*/
+			|| (current == 'Q')
+			/*[ENDIF] INLINE-TYPES*/
+		) {
 			int start = index;
 			while(signature[index] == '[') {
 				index++;
 			}
 			String name;
-			if (signature[index] != 'L') {
+			if ((signature[index] != 'L')
+				/*[IF INLINE-TYPES]*/
+				&& (signature[index] != 'Q')
+				/*[ENDIF] INLINE-TYPES*/
+			) {
 				name = descriptor.substring(start, index + 1);
 			} else {
 				int end = descriptor.indexOf(';', index);

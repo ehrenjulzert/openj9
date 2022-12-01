@@ -543,6 +543,9 @@ UDATA JNICALL pushArguments(J9VMThread *vmThread, J9Method* method, void *args) 
 					sigChar += 1;
 				}
 				skipSignature = ('L' == *sigChar++);
+#if defined(J9VM_OPT_VALHALLA_VALUE_TYPES)
+			case 'Q': /* fall through */
+#endif /* #if defined(J9VM_OPT_VALHALLA_VALUE_TYPES) */
 			case 'L': /* FALLTHROUGH */
 				/* skip the rest of the signature */
 				if (skipSignature) {
@@ -594,7 +597,7 @@ UDATA JNICALL pushArguments(J9VMThread *vmThread, J9Method* method, void *args) 
 				break;
 			case ')':
 				vmThread->sp = sp;
-				return (*sigChar == 'L' || *sigChar == '[') ? J9_SSF_RETURNS_OBJECT : 0;
+				return (IS_REF_OR_VAL_SIGNATURE(*sigChar) || *sigChar == '[') ? J9_SSF_RETURNS_OBJECT : 0;
 		}
 	}
 }
