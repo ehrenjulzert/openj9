@@ -1250,7 +1250,7 @@ ClassFileWriter::computeArgsCount(U_16 methodRefIndex)
 			while ((index < count) && ('[' == sig[index])) {
 				index += 1;
 			}
-			if (('L' != sig[index]) && !IS_QTYPE(sig[index])) {
+			if (!IS_REF_OR_VAL_SIGNATURE(sig[index])) {
 				break;
 			}
 			/* fall through */

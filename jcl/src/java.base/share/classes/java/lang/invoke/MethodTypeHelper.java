@@ -218,13 +218,21 @@ final class MethodTypeHelper {
 		char current = signature[index];
 		Class<?> c;
 
-		if ((current == 'L') || (current == '[')) {
+		if ((current == 'L') || (current == '[')
+			/*[IF INLINE-TYPES]*/
+			|| (current == 'Q')
+			/*[ENDIF] INLINE-TYPES*/
+		) {
 			int start = index;
 			while(signature[index] == '[') {
 				index++;
 			}
 			String name;
-			if (signature[index] != 'L') {
+			if ((signature[index] != 'L')
+				/*[IF INLINE-TYPES]*/
+				&& (signature[index] != 'Q')
+				/*[ENDIF] INLINE-TYPES*/
+			) {
 				name = descriptor.substring(start, index + 1);
 			} else {
 				int end = descriptor.indexOf(';', index);

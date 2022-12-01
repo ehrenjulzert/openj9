@@ -326,8 +326,12 @@ public class DTFJJavaClass implements JavaClass {
 				if (isArray()) {
 					J9ArrayClassPointer arrayClass = J9ArrayClassPointer.cast(j9class);
 					
-					//Any multi-dimensional array is an object array, as is any single dimensional array with an object type (i.e. [Lwhatever;)
-					if(arrayClass.arity().gt(1) || getName().charAt(1) == 'L') {
+					//Any multi-dimensional array is an object array, as is any single dimensional array with an object type (i.e. [Lwhatever; or [Qwhatever;)
+					if (arrayClass.arity().gt(1) || getName().charAt(1) == 'L'
+						/*[IF INLINE-TYPES]*/
+						|| getName().charAt(1) == 'L'
+						/*[ENDIF] INLINE-TYPES*/
+					) {
 						isObjectArray = true;
 					} else {
 						isObjectArray = false;

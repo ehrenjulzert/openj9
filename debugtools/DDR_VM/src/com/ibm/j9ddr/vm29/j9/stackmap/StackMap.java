@@ -502,7 +502,11 @@ public class StackMap
 						utf8Signature = J9ROMFieldRefPointer.cast(pool.add(index)).nameAndSignature().signature();
 						
 						signature = J9UTF8Helper.stringValue(utf8Signature).charAt(0);
-						if ((signature == 'L') || (signature == '[')) {
+						if ((signature == 'L') || (signature == '[')
+							/*[IF INLINE-TYPES]*/
+							|| (signature == 'Q')
+							/*[ENDIF] INLINE-TYPES*/
+						) {
 							PUSH(OBJ);
 						} else {
 							PUSH(INT);
@@ -515,7 +519,12 @@ public class StackMap
 						utf8Signature = J9ROMFieldRefPointer.cast(pool.add(index)).nameAndSignature().signature();
 						
 						signature = J9UTF8Helper.stringValue(utf8Signature).charAt(0);
-						if ((signature == 'L') || (signature == '[')) {
+						if (
+							(signature == 'L') || (signature == '[')
+							/*[IF INLINE-TYPES]*/
+							|| (signature == 'Q')
+							/*[ENDIF] INLINE-TYPES*/
+						) {
 							PUSH(OBJ);
 						} else {
 							PUSH(INT);
@@ -568,11 +577,19 @@ public class StackMap
 							POP();
 							if (args[i] == '[') {
 								while (args[++i] == '[');
-								if (args[i] != 'L') {
+								if ((args[i] != 'L')
+									/*[IF INLINE-TYPES]*/
+									&& (args[i] != 'Q')
+									/*[ENDIF] INLINE-TYPES*/
+								) {
 									continue;
 								}
 							}
-							if (args[i] == 'L') {
+							if ((args[i] == 'L')
+								/*[IF INLINE-TYPES]*/
+								|| (args[i] == 'Q')
+								/*[ENDIF] INLINE-TYPES*/
+							) {
 								while (args[++i] != ';');
 								continue;
 							}
@@ -583,7 +600,11 @@ public class StackMap
 
 						signature = args[i + 1];
 						if (signature != 'V') {
-							if ((signature == 'L') || (signature == '[')) {
+							if ((signature == 'L') || (signature == '[')
+								/*[IF INLINE-TYPES]*/
+								|| (signature == 'Q')
+								/*[ENDIF] INLINE-TYPES*/
+							) {
 								PUSH(OBJ);
 							} else {
 								PUSH(INT);
@@ -612,11 +633,19 @@ public class StackMap
 							POP();
 							if (args[i] == '[') {
 								while (args[++i] == '[');
-								if (args[i] != 'L') {
+								if ((args[i] != 'L')
+									/*[IF INLINE-TYPES]*/
+									&& (args[i] != 'Q')
+									/*[ENDIF] INLINE-TYPES*/
+								) {
 									continue;
 								}
 							}
-							if (args[i] == 'L') {
+							if ((args[i] == 'L')
+								/*[IF INLINE-TYPES]*/
+								|| (args[i] == 'Q')
+								/*[ENDIF] INLINE-TYPES*/
+							) {
 								while (args[++i] != ';');
 								continue;
 							}
@@ -627,7 +656,11 @@ public class StackMap
 
 						signature = args[i + 1];
 						if (signature != 'V') {
-							if ((signature == 'L') || (signature == '[')) {
+							if ((signature == 'L') || (signature == '[')
+								/*[IF INLINE-TYPES]*/
+								|| (signature == 'Q')
+								/*[ENDIF] INLINE-TYPES*/
+							) {
 								PUSH(OBJ);
 							} else {
 								PUSH(INT);

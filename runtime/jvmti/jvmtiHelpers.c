@@ -661,7 +661,7 @@ skipSignature(U_8 ** pUtfData)
 
 	/* Skip to the end of Object type signatures */
 
-	if (utfChar == 'L') {
+	if (IS_REF_OR_VAL_SIGNATURE(utfChar)) {
 		do {
 			utfChar = nextUTFChar(pUtfData);
 		} while (utfChar != ';');

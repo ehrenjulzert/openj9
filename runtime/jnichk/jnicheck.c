@@ -2476,7 +2476,7 @@ jniCheckObjectArg(const char* function, JNIEnv* env, jobject aJobject, char* sig
 		while (*sigArgs == '[') {
 			sigArgs++;
 		}
-		if ((*sigArgs == 'L') || IS_QTYPE(*sigArgs)) {
+		if (IS_REF_OR_VAL_SIGNATURE(*sigArgs)) {
 			while (*sigArgs != ';') {
 				sigArgs++;
 			}
