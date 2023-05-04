@@ -72,3 +72,4 @@ NestMembers, CFR_ATTRIBUTE_NestMembers, CFR_ATTRIBUTE_NestMembers
 NestHost, CFR_ATTRIBUTE_NestHost, CFR_ATTRIBUTE_NestHost
 Record, CFR_ATTRIBUTE_Record, CFR_ATTRIBUTE_Record
 PermittedSubclasses, CFR_ATTRIBUTE_PermittedSubclasses, CFR_ATTRIBUTE_PermittedSubclasses
+Preload, CFR_ATTRIBUTE_Preload, CFR_ATTRIBUTE_Preload

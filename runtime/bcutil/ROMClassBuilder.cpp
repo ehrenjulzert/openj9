@@ -1381,6 +1381,9 @@ ROMClassBuilder::computeOptionalFlags(ClassFileOracle *classFileOracle, ROMClass
 	if (_interfaceInjectionInfo.numOfInterfaces > 0) {
 		optionalFlags |= J9_ROMCLASS_OPTINFO_INJECTED_INTERFACE_INFO;
 	}
+	if (classFileOracle->hasPreloadClasses()) {
+		optionalFlags |= J9_ROMCLASS_OPTINFO_PRELOAD_ATTRIBUTE;
+	}
 #endif /* J9VM_OPT_VALHALLA_VALUE_TYPES */
 	return optionalFlags;
 }

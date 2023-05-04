@@ -1017,6 +1017,17 @@ class RecordComponentIterator
 	bool needsIdentityFlag() const { return _isIdentityFlagNeeded; }
 	bool hasIdentityFlagSet() const { return _hasIdentityFlagSet; }
 	bool isValueType() const { return _isValueType; }
+	bool hasPreloadClasses() const { return NULL != _preloadAttribute; }
+	U_16 getPreloadClassCount() const { return  hasPreloadClasses() ? _preloadAttribute->numberOfClasses : 0; }
+
+	U_16 getPreloadClassNameAtIndex(U_16 index) const {
+		U_16 result = 0;
+		if (hasPreloadClasses()) {
+			U_16 classCpIndex = _preloadAttribute->classes[index];
+			result = _classFile->constantPool[classCpIndex].slot1;
+		}
+		return result;
+	}
 #endif /* J9VM_OPT_VALHALLA_VALUE_TYPES */
 
 	U_16 getPermittedSubclassesClassNameAtIndex(U_16 index) const {
@@ -1146,6 +1157,9 @@ private:
 	J9CfrAttributeInnerClasses *_innerClasses;
 	J9CfrAttributeBootstrapMethods *_bootstrapMethodsAttribute;
 	J9CfrAttributePermittedSubclasses *_permittedSubclassesAttribute;
+#if defined(J9VM_OPT_VALHALLA_VALUE_TYPES)
+	J9CfrAttributePreload *_preloadAttribute;
+#endif /* defined(J9VM_OPT_VALHALLA_VALUE_TYPES) */
 #if JAVA_SPEC_VERSION >= 11
 	J9CfrAttributeNestMembers *_nestMembers;
 #endif /* JAVA_SPEC_VERSION >= 11 */
