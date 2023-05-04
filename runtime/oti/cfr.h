@@ -241,6 +241,9 @@ typedef struct J9CfrAttribute {
 #define CFR_ATTRIBUTE_NestHost 26
 #define CFR_ATTRIBUTE_Record 27
 #define CFR_ATTRIBUTE_PermittedSubclasses 28
+#if defined(J9VM_OPT_VALHALLA_VALUE_TYPES)
+#define CFR_ATTRIBUTE_Preload 29
+#endif /* defined(J9VM_OPT_VALHALLA_VALUE_TYPES) */
 #define CFR_ATTRIBUTE_StrippedLocalVariableTypeTable  122
 #define CFR_ATTRIBUTE_StrippedSourceDebugExtension  123
 #define CFR_ATTRIBUTE_StrippedInnerClasses  124
@@ -530,6 +533,17 @@ typedef struct J9CfrAttributePermittedSubclasses {
     U_16 numberOfClasses;
     U_16* classes;
 } J9CfrAttributePermittedSubclasses;
+
+#if defined(J9VM_OPT_VALHALLA_VALUE_TYPES)
+typedef struct J9CfrAttributePreload {
+    U_8 tag;
+    U_16 nameIndex;
+    U_32 length;
+    UDATA romAddress;
+    U_16 numberOfClasses;
+    U_16* classes;
+} J9CfrAttributePreload;
+#endif /* defined(J9VM_OPT_VALHALLA_VALUE_TYPES) */
 
 /* @ddr_namespace: map_to_type=J9CfrConstantPoolInfo */
 
