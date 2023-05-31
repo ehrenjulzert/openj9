@@ -1017,6 +1017,8 @@ class RecordComponentIterator
 	bool needsIdentityFlag() const { return _isIdentityFlagNeeded; }
 	bool hasIdentityFlagSet() const { return _hasIdentityFlagSet; }
 	bool isValueType() const { return _isValueType; }
+	bool hasImplicitCreation() const { return NULL != _implicitCreation; }
+	bool getImplicitCreationFlags() const { return hasImplicitCreation() ? _implicitCreation->implicitCreationFlags : 0; }
 	bool hasPreloadClasses() const { return NULL != _preloadAttribute; }
 	U_16 getPreloadClassCount() const { return  hasPreloadClasses() ? _preloadAttribute->numberOfClasses : 0; }
 
@@ -1158,6 +1160,7 @@ private:
 	J9CfrAttributeBootstrapMethods *_bootstrapMethodsAttribute;
 	J9CfrAttributePermittedSubclasses *_permittedSubclassesAttribute;
 #if defined(J9VM_OPT_VALHALLA_VALUE_TYPES)
+	J9CfrAttributeImplicitCreation *_implicitCreation;
 	J9CfrAttributePreload *_preloadAttribute;
 #endif /* defined(J9VM_OPT_VALHALLA_VALUE_TYPES) */
 #if JAVA_SPEC_VERSION >= 11

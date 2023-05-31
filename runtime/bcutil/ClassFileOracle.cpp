@@ -614,6 +614,9 @@ ClassFileOracle::walkAttributes()
 			}
 			break;
 		}
+		case CFR_ATTRIBUTE_ImplicitCreation: {
+			_implicitCreation = (J9CfrAttributeImplicitCreation *)attrib;
+		}
 #endif /* defined(J9VM_OPT_VALHALLA_VALUE_TYPES) */
 #if JAVA_SPEC_VERSION >= 11
 		case CFR_ATTRIBUTE_NestMembers:

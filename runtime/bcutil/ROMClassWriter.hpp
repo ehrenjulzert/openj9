@@ -155,6 +155,7 @@ private:
 #if defined(J9VM_OPT_VALHALLA_VALUE_TYPES)
 	void writeInjectedInterfaces(Cursor *cursor, bool markAndCountOnly);
 	void writePreload(Cursor *cursor, bool markAndCountOnly);
+	void writeImplicitCreation(Cursor *cursor, bool markAndCountOnly);
 #endif /* J9VM_OPT_VALHALLA_VALUE_TYPES */
 
 	BufferManager *_bufferManager;
