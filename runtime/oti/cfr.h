@@ -551,6 +551,10 @@ typedef struct J9CfrAttributeImplicitCreation {
     U_32 length;
     U_16 implicitCreationFlags;
 } J9CfrAttributeImplicitCreation;
+
+#define IMPLICIT_CREATION_FLAGS_DEFAULT 1
+#define IMPLICIT_CREATION_FLAGS_NON_ATOMIC 2
+
 #endif /* defined(J9VM_OPT_VALHALLA_VALUE_TYPES) */
 
 /* @ddr_namespace: map_to_type=J9CfrConstantPoolInfo */

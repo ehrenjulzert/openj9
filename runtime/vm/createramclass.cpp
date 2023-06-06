@@ -2299,6 +2299,13 @@ nativeOOM:
 			}
 		}
 
+		if (J9ROMCLASS_ALLOWS_NON_ATOMIC_CREATION(romClass)) {
+			classFlags |= J9ClassAllowsNonAtomicCreation;
+		}
+		if (J9ROMCLASS_HAS_DEFAULT(romClass)) {
+			classFlags |= J9ClassIsValueType;
+		}
+
 		if (J9ROMCLASS_IS_VALUE(romClass)) {
 			classFlags |= J9ClassIsValueType;
 #if defined(J9VM_OPT_VALHALLA_FLATTENABLE_VALUE_TYPES)
@@ -3177,7 +3184,7 @@ fail:
 			 *              + J9ClassEnsureHashed (inherited)
 			 *             + J9ClassHasOffloadAllowSubtasksNatives
 			 *            + J9ClassIsPrimitiveValueType
-			 *           + Unused
+			 *           + J9ClassAllowsNonAtomicCreation
 			 *
 			 *         + Unused
 			 *        + Unused

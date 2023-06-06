@@ -1019,6 +1019,8 @@ class RecordComponentIterator
 	bool isValueType() const { return _isValueType; }
 	bool hasImplicitCreation() const { return NULL != _implicitCreation; }
 	bool getImplicitCreationFlags() const { return hasImplicitCreation() ? _implicitCreation->implicitCreationFlags : 0; }
+	bool isImplicitCreationDefault() const { return J9_ARE_ALL_BITS_SET(getImplicitCreationFlags(), IMPLICIT_CREATION_FLAGS_DEFAULT); }
+	bool isImplicitCreationNonAtomic() const { return J9_ARE_ALL_BITS_SET(getImplicitCreationFlags(), IMPLICIT_CREATION_FLAGS_NON_ATOMIC); }
 	bool hasPreloadClasses() const { return NULL != _preloadAttribute; }
 	U_16 getPreloadClassCount() const { return  hasPreloadClasses() ? _preloadAttribute->numberOfClasses : 0; }
 
