@@ -231,6 +231,7 @@ ClassFileOracle::ClassFileOracle(BufferManager *bufferManager, J9CfrClassFile *c
 	_hasNonStaticFields(false),
 	_hasNonEmptyConstructor(false),
 	_preloadAttribute(NULL),
+	_implicitCreation(NULL),
 #endif /* J9VM_OPT_VALHALLA_VALUE_TYPES */
 	_recordComponentCount(0),
 	_permittedSubclassesAttribute(NULL),
