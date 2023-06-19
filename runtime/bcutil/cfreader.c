@@ -953,7 +953,7 @@ readAttributes(J9CfrClassFile * classfile, J9CfrAttribute *** pAttributes, U_32 
 				NEXT_U16(preload->classes[j], index);
 			}
 			break;
-		
+
 		case CFR_ATTRIBUTE_ImplicitCreation:
 			/* JVMS: There may be at most one ImplicitCreation attribute in the attributes table of a ClassFile structure... */
 			if (implicitCreationAttributeRead) {
@@ -2607,7 +2607,7 @@ checkAttributes(J9PortLibrary* portLib, J9CfrClassFile* classfile, J9CfrAttribut
 				}
 			}
 			break;
-		
+
 		case CFR_ATTRIBUTE_ImplicitCreation:
 			value = ((J9CfrAttributeImplicitCreation*)attrib)->nameIndex;
 			if ((0 == value) || (value >= cpCount)) {

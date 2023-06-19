@@ -549,6 +549,7 @@ typedef struct J9CfrAttributeImplicitCreation {
     U_8 tag;
     U_16 nameIndex;
     U_32 length;
+    UDATA romAddress;
     U_16 implicitCreationFlags;
 } J9CfrAttributeImplicitCreation;
 
