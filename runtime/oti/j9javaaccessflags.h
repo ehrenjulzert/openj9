@@ -36,6 +36,8 @@
 #define J9AccBridge 0x40
 
 #define J9AccClassHasIdentity 0x20
+#define J9AccClassHasDefault 0x10
+#define J9AccClassAllowsNonAtomicCreation 0x20
 #define J9AccClassIsValueBased 0x40
 #define J9AccClassHiddenOptionNestmate 0x80
 #define J9AccClassHiddenOptionStrong 0x100
