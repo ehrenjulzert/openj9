@@ -458,7 +458,6 @@ ROMClassWriter::writeROMClass(Cursor *cursor,
 #if defined(J9VM_OPT_VALHALLA_VALUE_TYPES)
 	writeInjectedInterfaces(cursor, markAndCountOnly);
 	writePreload(cursor, markAndCountOnly);
-	writeImplicitCreation(cursor, markAndCountOnly);
 #endif /* J9VM_OPT_VALHALLA_VALUE_TYPES */
 	writeOptionalInfo(cursor);
 	writeCallSiteData(cursor, markAndCountOnly);
@@ -1906,18 +1905,6 @@ ROMClassWriter::writePreload(Cursor *cursor, bool markAndCountOnly)
 				U_16 classNameCpIndex = _classFileOracle->getPreloadClassNameAtIndex(index);
 				cursor->writeSRP(_srpKeyProducer->mapCfrConstantPoolIndexToKey(classNameCpIndex), Cursor::SRP_TO_UTF8);
 			}
-		}
-	}
-}
-
-void
-ROMClassWriter::writeImplicitCreation(Cursor *cursor, bool markAndCountOnly)
-{
-	if (_classFileOracle->hasImplicitCreation()) {
-		if (markAndCountOnly) {
-			cursor->skip(sizeof(U_32));
-		} else {
-			cursor->writeU32(_classFileOracle->getImplicitCreationFlags(), Cursor::GENERIC);
 		}
 	}
 }
