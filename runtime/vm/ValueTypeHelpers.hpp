@@ -596,6 +596,11 @@ done:
 		J9Class *destClazz = J9OBJECT_CLAZZ(currentThread, destObject);
 		J9Class *destComponentClass = ((J9ArrayClass *)destClazz)->componentType;
 
+		J9UTF8 * className = NNSRP_PTR_GET(srcClazz->romClass->className, J9UTF8 *);
+		printf("Src class name: %.*s\n", className->length, className->data);
+		className = NNSRP_PTR_GET(destClazz->romClass->className, J9UTF8 *);
+		printf("Dest class name: %.*s\n", className->length, className->data);
+
 		/* Array elements must be copied backwards if source and destination overlap in memory and source is before destination */
 		if ((srcObject == destObject) && (srcIndex < destIndex) && ((srcIndex + lengthInSlots) > destIndex)) {
 			srcEndIndex = srcIndex;
