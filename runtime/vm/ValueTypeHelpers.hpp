@@ -623,7 +623,9 @@ done:
 				*/
 				if ((NULL == copyObject) && J9_IS_J9CLASS_FLATTENED(srcClazz)) {
 					VM_VMHelpers::pushObjectInSpecialFrame(currentThread, srcObject);
+					VM_VMHelpers::pushObjectInSpecialFrame(currentThread, destObject);
 					copyObject = loadFlattenableArrayElement(currentThread, objectAccessBarrier, objectAllocate, srcObject, srcIndex, false);
+					destObject = VM_VMHelpers::popObjectInSpecialFrame(currentThread);
 					srcObject = VM_VMHelpers::popObjectInSpecialFrame(currentThread);
 				}
 
@@ -636,14 +638,6 @@ done:
 			UDATA typeChecksRequired = !isSameOrSuperClassOf(destClazz, srcClazz);
 
 			while (srcIndex < srcEndIndex) {
-				J9Class *theCurrentComponentClass = ((J9ArrayClass *)destClazz)->componentType;
-				className = NNSRP_GET(srcClazz->romClass->className, J9UTF8 *);
-				fprintf(stderr, "WHILE %p, Src class name: %.*s\n", theCurrentComponentClass, className->length, className->data);
-				fprintf(stderr, "WHILE Dest class addr: %p", destClazz);
-				className = NNSRP_GET(destClazz->romClass->className, J9UTF8 *);
-				fprintf(stderr, "WHILE %p, Dest class name: %.*s\n", theCurrentComponentClass, className->length, className->data);
-				className = NNSRP_GET(theCurrentComponentClass->romClass->className, J9UTF8 *);
-				fprintf(stderr, "WHILE %p, Dest component class name: %.*s\n", theCurrentComponentClass, className->length, className->data);
 
 				j9object_t copyObject = loadFlattenableArrayElement(currentThread, objectAccessBarrier, objectAllocate, srcObject, srcIndex, true);
 
@@ -655,7 +649,9 @@ done:
 				*/
 				if ((NULL == copyObject) && J9_IS_J9CLASS_FLATTENED(srcClazz)) {
 					VM_VMHelpers::pushObjectInSpecialFrame(currentThread, srcObject);
+					VM_VMHelpers::pushObjectInSpecialFrame(currentThread, destObject);
 					copyObject = loadFlattenableArrayElement(currentThread, objectAccessBarrier, objectAllocate, srcObject, srcIndex, false);
+					destObject = VM_VMHelpers::popObjectInSpecialFrame(currentThread);
 					srcObject = VM_VMHelpers::popObjectInSpecialFrame(currentThread);
 				}
 
