@@ -596,6 +596,13 @@ done:
 		J9Class *destClazz = J9OBJECT_CLAZZ(currentThread, destObject);
 		J9Class *destComponentClass = ((J9ArrayClass *)destClazz)->componentType;
 
+		J9UTF8 * className = NNSRP_GET(srcClazz->romClass->className, J9UTF8 *);
+		fprintf(stderr, "%p, Src class name: %.*s\n", destComponentClass, className->length, className->data);
+		className = NNSRP_GET(destClazz->romClass->className, J9UTF8 *);
+		fprintf(stderr, "%p, Dest class name: %.*s\n", destComponentClass, className->length, className->data);
+		className = NNSRP_GET(destComponentClass->romClass->className, J9UTF8 *);
+		fprintf(stderr, "%p, Dest component class name: %.*s\n", destComponentClass, className->length, className->data);
+
 		/* Array elements must be copied backwards if source and destination overlap in memory and source is before destination */
 		if ((srcObject == destObject) && (srcIndex < destIndex) && ((srcIndex + lengthInSlots) > destIndex)) {
 			srcEndIndex = srcIndex;
@@ -629,6 +636,15 @@ done:
 			UDATA typeChecksRequired = !isSameOrSuperClassOf(destClazz, srcClazz);
 
 			while (srcIndex < srcEndIndex) {
+				J9Class *theCurrentComponentClass = ((J9ArrayClass *)destClazz)->componentType;
+				className = NNSRP_GET(srcClazz->romClass->className, J9UTF8 *);
+				fprintf(stderr, "WHILE %p, Src class name: %.*s\n", theCurrentComponentClass, className->length, className->data);
+				fprintf(stderr, "WHILE Dest class addr: %p", destClazz);
+				className = NNSRP_GET(destClazz->romClass->className, J9UTF8 *);
+				fprintf(stderr, "WHILE %p, Dest class name: %.*s\n", theCurrentComponentClass, className->length, className->data);
+				className = NNSRP_GET(theCurrentComponentClass->romClass->className, J9UTF8 *);
+				fprintf(stderr, "WHILE %p, Dest component class name: %.*s\n", theCurrentComponentClass, className->length, className->data);
+
 				j9object_t copyObject = loadFlattenableArrayElement(currentThread, objectAccessBarrier, objectAllocate, srcObject, srcIndex, true);
 
 				/*
