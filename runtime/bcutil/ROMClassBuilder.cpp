@@ -1170,8 +1170,8 @@ ROMClassBuilder::finishPrepareAndLaydown(
  *                                     + UNUSED
  *                                    + UNUSED
  *
- *                                  + AccDefault
- *                                 + AccNonAtomic
+ *                                  + AccImplicitCreateHasDefaultValue
+ *                                 + AccImplicitCreateNonAtomic
  *                                + J9AccClassIsValueBased
  *                              + J9AccClassHiddenOptionNestmate
  *
@@ -1339,10 +1339,10 @@ ROMClassBuilder::computeExtraModifiers(ClassFileOracle *classFileOracle, ROMClas
 
 #if defined(J9VM_OPT_VALHALLA_VALUE_TYPES)
 	if (classFileOracle->isImplicitCreationNonAtomic()) {
-		modifiers |= J9AccClassAllowsNonAtomicCreation;
+		modifiers |= J9AccImplicitCreateNonAtomic;
 	}
-	if (classFileOracle->isImplicitCreationDefault()) {
-		modifiers |= J9AccClassHasDefault;
+	if (classFileOracle->isImplicitCreationHasDefaultValue()) {
+		modifiers |= J9AccImplicitCreateHasDefaultValue;
 	}
 #endif /* defined(J9VM_OPT_VALHALLA_VALUE_TYPES) */
 

@@ -1696,7 +1696,7 @@ J9NLS_CFR_ERR_INVALID_CLASS_FLAGS_ON_VNEW.user_response=Contact the provider of 
 # END NON-TRANSLATABLE
 
 # Preload is not translatable
-J9NLS_CFR_ERR_MULTIPLE_PRELOAD_ATTRIBUTES=multiple Preload attributes
+J9NLS_CFR_ERR_MULTIPLE_PRELOAD_ATTRIBUTES=Multiple Preload attributes
 # START NON-TRANSLATABLE
 J9NLS_CFR_ERR_MULTIPLE_PRELOAD_ATTRIBUTES.explanation=Please consult the Java Virtual Machine Specification for a detailed explanation.
 J9NLS_CFR_ERR_MULTIPLE_PRELOAD_ATTRIBUTES.system_action=The JVM will throw a verification or classloading related exception such as java.lang.ClassFormatError.
@@ -1720,7 +1720,7 @@ J9NLS_CFR_ERR_PRELOAD_CLASS_ENTRY_NOT_CLASS_TYPE.user_response=Contact the provi
 # END NON-TRANSLATABLE
 
 # ImplicitCreation is not translatable
-J9NLS_CFR_ERR_MULTIPLE_IMPLICITCREATION_ATTRIBUTES=multiple ImplicitCreation attributes
+J9NLS_CFR_ERR_MULTIPLE_IMPLICITCREATION_ATTRIBUTES=Multiple ImplicitCreation attributes
 # START NON-TRANSLATABLE
 J9NLS_CFR_ERR_MULTIPLE_IMPLICITCREATION_ATTRIBUTES.explanation=Please consult the Java Virtual Machine Specification for a detailed explanation.
 J9NLS_CFR_ERR_MULTIPLE_IMPLICITCREATION_ATTRIBUTES.system_action=The JVM will throw a verification or classloading related exception such as java.lang.ClassFormatError.

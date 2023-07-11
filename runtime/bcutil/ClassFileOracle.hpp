@@ -46,6 +46,9 @@
  * */
 #define UTF8_INDEX_FROM_CLASS_INDEX(cp, cpIndex)  ((U_16)((cpIndex == 0)? 0 : cp[cpIndex].slot1))
 
+#define IMPLICIT_CREATION_FLAGS_DEFAULT 1
+#define IMPLICIT_CREATION_FLAGS_NON_ATOMIC 2
+
 class BufferManager;
 class ConstantPoolMap;
 class ROMClassCreationContext;
@@ -1019,7 +1022,7 @@ class RecordComponentIterator
 	bool isValueType() const { return _isValueType; }
 	bool hasImplicitCreation() const { return NULL != _implicitCreation; }
 	U_16 getImplicitCreationFlags() const { return hasImplicitCreation() ? _implicitCreation->implicitCreationFlags : 0; }
-	bool isImplicitCreationDefault() const { return J9_ARE_ALL_BITS_SET(getImplicitCreationFlags(), IMPLICIT_CREATION_FLAGS_DEFAULT); }
+	bool isImplicitCreationHasDefaultValue() const { return J9_ARE_ALL_BITS_SET(getImplicitCreationFlags(), IMPLICIT_CREATION_FLAGS_DEFAULT); }
 	bool isImplicitCreationNonAtomic() const { return J9_ARE_ALL_BITS_SET(getImplicitCreationFlags(), IMPLICIT_CREATION_FLAGS_NON_ATOMIC); }
 	bool hasPreloadClasses() const { return NULL != _preloadAttribute; }
 	U_16 getPreloadClassCount() const { return  hasPreloadClasses() ? _preloadAttribute->numberOfClasses : 0; }

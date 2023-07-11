@@ -1945,6 +1945,7 @@ loadFlattenableFieldValueClasses(J9VMThread *currentThread, J9ClassLoader *class
 	bool eligibleForFastSubstitutability = true;
 
 	/* Preload classes marked for preloading */
+	/* Currently classes are preloaded if they are mentioned in the preload attribute or if they are a Q type. In the future (when javac is updated with better support for the preload attribute) the Q type check will be removed. */
 	if (J9_ARE_ALL_BITS_SET(romClass->optionalFlags, J9_ROMCLASS_OPTINFO_PRELOAD_ATTRIBUTE)) {
 		U_32 *numberOfPreloadClassesPtr = getNumberOfPreloadClassesPtr(romClass);
 
@@ -2303,6 +2304,7 @@ nativeOOM:
 			classFlags |= J9ClassAllowsNonAtomicCreation;
 		}
 		if (J9ROMCLASS_HAS_DEFAULT(romClass)) {
+			/* J9ClassIsValueType is being reused here intentionally */
 			classFlags |= J9ClassIsValueType;
 		}
 
